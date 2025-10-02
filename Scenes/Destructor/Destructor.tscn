@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://be2hstbvm7be5"]
+
+[ext_resource type="Script" path="res://Scenes/Destructor/Destructor.gd" id="1_ppaaw"]
+
+[node name="Destructor" type="Area2D"]
+script = ExtResource("1_ppaaw")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+position = Vector2(-576, -232)
+polygon = PackedVector2Array(576, 216, 592, 240, 560, 240)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(-576, -232)
+polygon = PackedVector2Array(576, 216, 560, 240, 592, 240)

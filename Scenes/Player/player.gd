@@ -45,3 +45,14 @@ func traverse_edge(screenSize):
 
 func explode_test():
 	sideOne.rotate(45)
+
+func _on_player_area_area_entered(area):
+	print(area.get_class())
+	if area is Destructor:
+		die(area)
+
+func die(killer):
+	# get killer (e.g. asteroid) direction
+	print(killer.velocity)
+	var momentumDirection = killer.velocity
+	# Set parts of the ship to rotate and move in that direction

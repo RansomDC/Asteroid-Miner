@@ -1,4 +1,4 @@
-class_name Destructor extends Node2D
+class_name DestructorPath extends Node2D
 
 @onready var path_follow : PathFollow2D = $Path2D/PathFollow2D
 

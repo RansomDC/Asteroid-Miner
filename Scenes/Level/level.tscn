@@ -1,34 +1,14 @@
 [gd_scene load_steps=4 format=3 uid="uid://cuvxplv7nn65r"]
 
 [ext_resource type="PackedScene" uid="uid://bovh403sqglwm" path="res://Scenes/Player/player.tscn" id="1_o2w7e"]
-[ext_resource type="Script" path="res://Scenes/Destructor/DestructorNode.gd" id="2_jf58c"]
-
-[sub_resource type="Curve2D" id="Curve2D_fxuxj"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 576, 320, 0, 0, 0, 0, 1408, 320, 0, 0, 0, 0, 1408, 832, 0, 0, 0, 0, 576, 832, 0, 0, 0, 0, 576, 320)
-}
-point_count = 5
+[ext_resource type="PackedScene" uid="uid://d16hv2l0w6ouk" path="res://Scenes/DestructorPath/DestructorPath.tscn" id="2_fm8d4"]
+[ext_resource type="PackedScene" uid="uid://be2hstbvm7be5" path="res://Scenes/Destructor/Destructor.tscn" id="2_yr2iw"]
 
 [node name="Level" type="Node"]
 
 [node name="Player" parent="." instance=ExtResource("1_o2w7e")]
 position = Vector2(960, 540)
 
-[node name="DestructorNode" type="Node2D" parent="."]
-script = ExtResource("2_jf58c")
+[node name="DestructorPath" parent="." instance=ExtResource("2_fm8d4")]
 
-[node name="Path2D" type="Path2D" parent="DestructorNode"]
-curve = SubResource("Curve2D_fxuxj")
-
-[node name="PathFollow2D" type="PathFollow2D" parent="DestructorNode/Path2D"]
-position = Vector2(576, 320)
-
-[node name="Destructor" type="Area2D" parent="DestructorNode/Path2D/PathFollow2D"]
-
-[node name="Polygon2D" type="Polygon2D" parent="DestructorNode/Path2D/PathFollow2D/Destructor"]
-position = Vector2(-576, -232)
-polygon = PackedVector2Array(576, 216, 592, 240, 560, 240)
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="DestructorNode/Path2D/PathFollow2D/Destructor"]
-position = Vector2(-576, -232)
-polygon = PackedVector2Array(576, 216, 560, 240, 592, 240)
+[node name="Destructor" parent="DestructorPath" instance=ExtResource("2_yr2iw")]
