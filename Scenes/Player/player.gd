@@ -7,11 +7,21 @@ class_name Player extends CharacterBody2D
 @export var ship_size = 45
 
 @onready var sideOne = $sideOne
+@onready var sideTwo = $sideTwo
+@onready var sideThree = $sideThree
+@onready var sideFour = $sideFour
+@onready var shipParts = getShipParts()
+
+var dead = false
 
 func _process(delta):
+	if dead == true:
+		sideOne.position.x += 200 * delta
+		sideOne.rotation += 2 * rotation_speed * delta
+
 	
 	if Input.is_action_just_pressed("explodeTest"):
-		explode_test()
+		explode_test(delta)
 
 func _physics_process(delta):
 	
@@ -43,12 +53,13 @@ func traverse_edge(screenSize):
 	elif (global_position.x - ship_size) > screenSize.x:
 		global_position.x = -ship_size
 
-func explode_test():
-	sideOne.rotate(45)
+func explode_test(delta):
+	sideOne.rotate(90)
+	
 
 func _on_player_area_area_entered(area):
 	print(area.get_class())
-	if area is Destructor:
+	if (area is DestructorTriangle) && (!dead):
 		die(area)
 
 func die(killer):
@@ -56,3 +67,12 @@ func die(killer):
 	print(killer.velocity)
 	var momentumDirection = killer.velocity
 	# Set parts of the ship to rotate and move in that direction
+	dead = true
+
+func getShipParts():
+	var playerChildren = get_children()
+	var result = []
+	for child in playerChildren:
+		if child.is_class("Line2D"):
+			result.append(child)
+	return result

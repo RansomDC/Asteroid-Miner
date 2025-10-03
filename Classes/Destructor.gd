@@ -1,3 +1,4 @@
+# The Destructor class allows a child that extends it to provide it's velocity
 class_name Destructor extends Area2D
 
 @export var velocity: Vector2 = Vector2.ZERO

@@ -1,9 +1,9 @@
 [gd_scene load_steps=2 format=3 uid="uid://be2hstbvm7be5"]
 
-[ext_resource type="Script" path="res://Scenes/Destructor/Destructor.gd" id="1_ppaaw"]
+[ext_resource type="Script" path="res://Scenes/DestructorTriangle/DestructorTriangle.gd" id="1_3s1m8"]
 
 [node name="Destructor" type="Area2D"]
-script = ExtResource("1_ppaaw")
+script = ExtResource("1_3s1m8")
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
 position = Vector2(-576, -232)
