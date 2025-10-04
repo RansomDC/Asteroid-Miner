@@ -2,7 +2,8 @@ class_name Player extends CharacterBody2D
 
 @export var MAX_SPEED = 540
 @export var speed = 30
-@export var rotation_speed = 5
+@export var turn_speed = 5
+@export var explode_rotation = 3
 @export var rotation_direction = 0
 @export var ship_size = 45
 
@@ -12,21 +13,50 @@ class_name Player extends CharacterBody2D
 @onready var sideFour = $sideFour
 @onready var shipParts = getShipParts()
 
+var rng = RandomNumberGenerator.new()
+var spinning_speeds = [-3, -2, 2, 3]
+
 var dead = false
+var deathMomentumDirection = Vector2.ZERO
 
 func _process(delta):
+	
+	### Ship Explode Logic ###
 	if dead == true:
-		sideOne.position.x += 200 * delta
-		sideOne.rotation += 2 * rotation_speed * delta
+		# First Make the ship stop moving
+		velocity = Vector2.ZERO
+		# Set the ships rotation to default
+		rotation = 0
+		
+		# For each part, set the angle of its movement after death
+		for part in shipParts:
+			if part.disperseDirection == Vector2.ZERO:
+				part.disperseDirection = deathMomentumDirection + Vector2(rng.randf_range(-40, 40), rng.randf_range(-40, 40))
+			if part.disperseRotation == 0:
+				part.disperseRotation = spinning_speeds.pick_random()
+			part.position.x += part.disperseDirection.x * 1 * delta
+			part.position.y += part.disperseDirection.y * 1 * delta
+			part.rotation += part.disperseRotation * delta
+			
+#		for part in shipParts:
+#			part.disperseDirection = deathMomentumDirection
+#			part.position.x += part.disperseDirection.x * 2 * delta
+#			part.position.y += part.disperseDirection.y * 2 * delta
+#			part.rotation += 2 * explode_rotation * delta
+		
+		
+	### End Ship Explode Logic ###
 
 	
 	if Input.is_action_just_pressed("explodeTest"):
+		print(velocity.angle())
 		explode_test(delta)
 
 func _physics_process(delta):
 	
 	get_input()
-	rotation += rotation_direction * rotation_speed * delta
+	if !dead:
+		rotation += rotation_direction * turn_speed * delta
 	
 	move_and_slide()
 	
@@ -63,9 +93,8 @@ func _on_player_area_area_entered(area):
 		die(area)
 
 func die(killer):
-	# get killer (e.g. asteroid) direction
-	print(killer.velocity)
-	var momentumDirection = killer.velocity
+	# get killer (e.g. asteroid) angle of movenet
+	deathMomentumDirection = killer.velocity
 	# Set parts of the ship to rotate and move in that direction
 	dead = true
 
