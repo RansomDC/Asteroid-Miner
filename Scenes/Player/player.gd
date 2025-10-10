@@ -23,30 +23,7 @@ func _process(delta):
 	
 	### Ship Explode Logic ###
 	if dead == true:
-		# First Make the ship stop moving
-		velocity = Vector2.ZERO
-		# Set the ships rotation to default
-		rotation = 0
-		
-		# For each part, set the angle of its movement after death
-		for part in shipParts:
-			if part.disperseDirection == Vector2.ZERO:
-				part.disperseDirection = deathMomentumDirection + Vector2(rng.randf_range(-40, 40), rng.randf_range(-40, 40))
-			if part.disperseRotation == 0:
-				part.disperseRotation = spinning_speeds.pick_random()
-			part.position.x += part.disperseDirection.x * 1 * delta
-			part.position.y += part.disperseDirection.y * 1 * delta
-			part.rotation += part.disperseRotation * delta
-			
-#		for part in shipParts:
-#			part.disperseDirection = deathMomentumDirection
-#			part.position.x += part.disperseDirection.x * 2 * delta
-#			part.position.y += part.disperseDirection.y * 2 * delta
-#			part.rotation += 2 * explode_rotation * delta
-		
-		
-	### End Ship Explode Logic ###
-
+		_explode_action(delta)
 	
 	if Input.is_action_just_pressed("explodeTest"):
 		print(velocity.angle())
@@ -105,3 +82,29 @@ func getShipParts():
 		if child.is_class("Line2D"):
 			result.append(child)
 	return result
+
+func _explode_action(delta):
+	# First Make the ship stop moving
+	velocity = Vector2.ZERO
+	# Set the ships rotation to default
+	rotation = 0
+	
+	# For each part, set the angle of its movement after death
+	for part in shipParts:
+		
+		# If the ship part doesn't have a random value set for the dispersal direction give it one
+		if part.disperseDirection == Vector2.ZERO:
+			part.disperseDirection = deathMomentumDirection + Vector2(rng.randf_range(-40, 40), rng.randf_range(-40, 40))
+			
+		# If the ship part doesn't have a random value set for the dispersal rotation give it one
+		if part.disperseRotation == 0:
+			part.disperseRotation = spinning_speeds.pick_random()
+			
+		# disperse the parts over time
+		part.position.x += part.disperseDirection.x * 1 * delta
+		part.position.y += part.disperseDirection.y * 1 * delta
+		# rotate the parts over time
+		part.rotation += part.disperseRotation * delta
+		
+		# Make the parts fade out
+		part.default_color.a8 -= 1
