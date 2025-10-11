@@ -1,5 +1,7 @@
 class_name Player extends CharacterBody2D
 
+signal died
+
 @export var MAX_SPEED = 540
 @export var speed = 30
 @export var turn_speed = 5
@@ -7,22 +9,19 @@ class_name Player extends CharacterBody2D
 @export var rotation_direction = 0
 @export var ship_size = 45
 
-@onready var sideOne = $sideOne
-@onready var sideTwo = $sideTwo
-@onready var sideThree = $sideThree
-@onready var sideFour = $sideFour
+@onready var collisionShape = $PlayerArea/PlayerCollisionPoly
 @onready var shipParts = getShipParts()
 
 var rng = RandomNumberGenerator.new()
 var spinning_speeds = [-3, -2, 2, 3]
 
-var dead = false
+var playerIsDead = false
 var deathMomentumDirection = Vector2.ZERO
 
 func _process(delta):
 	
-	### Ship Explode Logic ###
-	if dead == true:
+	#Ship Explode Logic
+	if playerIsDead == true:
 		_explode_action(delta)
 	
 	if Input.is_action_just_pressed("explodeTest"):
@@ -32,13 +31,14 @@ func _process(delta):
 func _physics_process(delta):
 	
 	get_input()
-	if !dead:
+	if !playerIsDead:
 		rotation += rotation_direction * turn_speed * delta
 	
 	move_and_slide()
 	
 	traverse_edge(get_viewport_rect().size)
 
+#region Movement and Location
 func get_input():
 	rotation_direction = Input.get_axis("ui_left", "ui_right")
 	if (Input.is_action_pressed("ui_up")):
@@ -59,22 +59,34 @@ func traverse_edge(screenSize):
 		global_position.x = (screenSize.x + ship_size)
 	elif (global_position.x - ship_size) > screenSize.x:
 		global_position.x = -ship_size
+#endregion
 
 func explode_test(delta):
-	sideOne.rotate(90)
+	pass
 	
 
 func _on_player_area_area_entered(area):
 	print(area.get_class())
-	if (area is DestructorTriangle) && (!dead):
+	if (area is Destructor) && (!playerIsDead):
 		die(area)
 
 func die(killer):
+	if !playerIsDead:
+		playerIsDead = true
+		emit_signal("died")
 	# get killer (e.g. asteroid) angle of movenet
 	deathMomentumDirection = killer.velocity
-	# Set parts of the ship to rotate and move in that direction
-	dead = true
+	collisionShape.set_deferred("disabled", true)
+	
+func respawn():
+	if playerIsDead:
+		playerIsDead = false
+	
+	velocity = Vector2.ZERO
+	#re-enable the player
+	collisionShape.set_deferred("disabled", false)
 
+#region Ship destruction animation logic
 func getShipParts():
 	var playerChildren = get_children()
 	var result = []
@@ -108,3 +120,4 @@ func _explode_action(delta):
 		
 		# Make the parts fade out
 		part.default_color.a8 -= 1
+#endregion
