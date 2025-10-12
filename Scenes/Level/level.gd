@@ -24,7 +24,7 @@ func _on_player_died():
 		#TODO: implement game over screen
 		#gameOverScreen.visible = true
 	else:
-		await get_tree().create_timer(1).timeout
+		await get_tree().create_timer(2.5).timeout
 #		Check if the spawn area is free of asteroids
 		while !playerSpawnArea.is_empty:
 			await get_tree().create_timer(0.1).timeout

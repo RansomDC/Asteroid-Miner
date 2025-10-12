@@ -85,8 +85,18 @@ func respawn():
 	velocity = Vector2.ZERO
 	#re-enable the player
 	collisionShape.set_deferred("disabled", false)
+	
+	#Make the player visible and restore the ship parts
+	for part in shipParts:
+		part.position.x = 0
+		part.position.y =0
+		part.rotation = 0
+		part.default_color.a8 = 255
+		part.disperseDirection = Vector2.ZERO
 
+###
 #region Ship destruction animation logic
+###
 func getShipParts():
 	var playerChildren = get_children()
 	var result = []
@@ -103,7 +113,6 @@ func _explode_action(delta):
 	
 	# For each part, set the angle of its movement after death
 	for part in shipParts:
-		
 		# If the ship part doesn't have a random value set for the dispersal direction give it one
 		if part.disperseDirection == Vector2.ZERO:
 			part.disperseDirection = deathMomentumDirection + Vector2(rng.randf_range(-40, 40), rng.randf_range(-40, 40))
@@ -120,4 +129,6 @@ func _explode_action(delta):
 		
 		# Make the parts fade out
 		part.default_color.a8 -= 1
+###
 #endregion
+###
