@@ -12,6 +12,10 @@ signal died
 @onready var collisionShape = $PlayerArea/PlayerCollisionPoly
 @onready var shipParts = getShipParts()
 
+# Components
+@onready var playerDeath = $PlayerDeathComponent
+@onready var navigateScreen = $NavigateScreenComponent
+
 var rng = RandomNumberGenerator.new()
 var spinning_speeds = [-3, -2, 2, 3]
 
@@ -23,10 +27,6 @@ func _process(delta):
 	#Ship Explode Logic
 	if playerIsDead == true:
 		_explode_action(delta)
-	
-	if Input.is_action_just_pressed("explodeTest"):
-		print(velocity.angle())
-		explode_test(delta)
 
 func _physics_process(delta):
 	
@@ -36,7 +36,8 @@ func _physics_process(delta):
 	
 	move_and_slide()
 	
-	traverse_edge(get_viewport_rect().size)
+	global_position.y = navigateScreen.traverse_y(get_viewport_rect().size, global_position, ship_size)
+	global_position.x = navigateScreen.traverse_x(get_viewport_rect().size, global_position, ship_size)
 
 #region Movement and Location
 func get_input():
@@ -49,21 +50,7 @@ func accelerate():
 	velocity.x += transform.y.x * -speed
 	velocity = velocity.limit_length(MAX_SPEED)
 
-# This set's the players location to the opposite side of the screen when they go past the edge.
-func traverse_edge(screenSize):
-	if (global_position.y + ship_size) < 0:
-		global_position.y = (screenSize.y + ship_size)
-	elif (global_position.y - ship_size) > screenSize.y:
-		global_position.y = -ship_size
-	if (global_position.x + ship_size) < 0:
-		global_position.x = (screenSize.x + ship_size)
-	elif (global_position.x - ship_size) > screenSize.x:
-		global_position.x = -ship_size
 #endregion
-
-func explode_test(delta):
-	pass
-	
 
 func _on_player_area_area_entered(area):
 	print(area.get_class())

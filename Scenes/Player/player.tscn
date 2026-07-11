@@ -1,11 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://bovh403sqglwm"]
+[gd_scene load_steps=6 format=3 uid="uid://bovh403sqglwm"]
 
 [ext_resource type="Script" path="res://Scenes/Player/player.gd" id="1_g0khc"]
-[ext_resource type="PackedScene" uid="uid://dtivktv8afc23" path="res://Scenes/ShipPart/ShipPart.tscn" id="2_e6nb8"]
-[ext_resource type="Script" path="res://Scenes/ShipPart/ShipPart.gd" id="3_ttank"]
+[ext_resource type="PackedScene" uid="uid://dtivktv8afc23" path="res://Scenes/DestructablePart/DestructablePart.tscn" id="2_e6nb8"]
+[ext_resource type="Script" path="res://Scenes/Player/PlayerDeathComponent.gd" id="2_qlfha"]
+[ext_resource type="Script" path="res://Scenes/Player/NavigateScreenComponent.gd" id="3_5eqnr"]
+[ext_resource type="Script" path="res://Scenes/DestructablePart/DestructablePart.gd" id="3_xxf50"]
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_g0khc")
+
+[node name="PlayerDeathComponent" type="Node" parent="."]
+script = ExtResource("2_qlfha")
+
+[node name="NavigateScreenComponent" type="Node" parent="."]
+script = ExtResource("3_5eqnr")
 
 [node name="PlayerArea" type="Area2D" parent="."]
 
@@ -14,26 +22,26 @@ polygon = PackedVector2Array(0, -24, 16, 16, 0, 8, -16, 16)
 
 [node name="sideOne" parent="." instance=ExtResource("2_e6nb8")]
 points = PackedVector2Array(0, -24, 8, 0)
-script = ExtResource("3_ttank")
+script = ExtResource("3_xxf50")
 
 [node name="sideTwo" parent="." instance=ExtResource("2_e6nb8")]
 points = PackedVector2Array(8, 0, 16, 16)
-script = ExtResource("3_ttank")
+script = ExtResource("3_xxf50")
 
 [node name="sideThree" parent="." instance=ExtResource("2_e6nb8")]
 points = PackedVector2Array(0, 8, 16, 16)
-script = ExtResource("3_ttank")
+script = ExtResource("3_xxf50")
 
 [node name="sideFour" parent="." instance=ExtResource("2_e6nb8")]
 points = PackedVector2Array(-16, 16, 0, 8)
-script = ExtResource("3_ttank")
+script = ExtResource("3_xxf50")
 
 [node name="sideFive" parent="." instance=ExtResource("2_e6nb8")]
 points = PackedVector2Array(-8, 0, -16, 16)
-script = ExtResource("3_ttank")
+script = ExtResource("3_xxf50")
 
 [node name="sideSix" parent="." instance=ExtResource("2_e6nb8")]
 points = PackedVector2Array(0, -24, -8, 0)
-script = ExtResource("3_ttank")
+script = ExtResource("3_xxf50")
 
 [connection signal="area_entered" from="PlayerArea" to="." method="_on_player_area_area_entered"]
