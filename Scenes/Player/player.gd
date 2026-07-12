@@ -9,12 +9,14 @@ signal died
 @export var rotation_direction = 0
 @export var ship_size = 45
 
-@onready var collisionShape = $PlayerArea/PlayerCollisionPoly
-@onready var shipParts = getShipParts()
 
 # Components
 @onready var playerDeath = $PlayerDeathComponent
 @onready var navigateScreen = $NavigateScreenComponent
+@onready var destructionComponent = $DestructionComponent
+
+@onready var collisionShape = $PlayerArea/PlayerCollisionPoly
+@onready var shipParts = destructionComponent.getParts()
 
 var rng = RandomNumberGenerator.new()
 var spinning_speeds = [-3, -2, 2, 3]
@@ -23,10 +25,10 @@ var playerIsDead = false
 var deathMomentumDirection = Vector2.ZERO
 
 func _process(delta):
-	
+	pass
 	#Ship Explode Logic
-	if playerIsDead == true:
-		_explode_action(delta)
+#	if playerIsDead == true:
+#		_explode_action(delta)
 
 func _physics_process(delta):
 	
@@ -36,8 +38,8 @@ func _physics_process(delta):
 	
 	move_and_slide()
 	
-	global_position.y = navigateScreen.traverse_y(get_viewport_rect().size, global_position, ship_size)
-	global_position.x = navigateScreen.traverse_x(get_viewport_rect().size, global_position, ship_size)
+	#Move player to other side of screen when they go off one side
+	global_position = navigateScreen.traverse_edge(get_viewport_rect().size, global_position, ship_size)
 
 #region Movement and Location
 func get_input():
@@ -60,6 +62,7 @@ func _on_player_area_area_entered(area):
 func die(killer):
 	if !playerIsDead:
 		playerIsDead = true
+		destructionComponent.destroy()
 		emit_signal("died")
 	# get killer (e.g. asteroid) angle of movenet
 	deathMomentumDirection = killer.velocity
@@ -68,6 +71,7 @@ func die(killer):
 func respawn():
 	if playerIsDead:
 		playerIsDead = false
+		destructionComponent.regen()
 	
 	velocity = Vector2.ZERO
 	#re-enable the player
@@ -97,23 +101,23 @@ func _explode_action(delta):
 	velocity = Vector2.ZERO
 	# Set the ships rotation to default
 	rotation = 0
-	
+
 	# For each part, set the angle of its movement after death
 	for part in shipParts:
 		# If the ship part doesn't have a random value set for the dispersal direction give it one
 		if part.disperseDirection == Vector2.ZERO:
 			part.disperseDirection = deathMomentumDirection + Vector2(rng.randf_range(-40, 40), rng.randf_range(-40, 40))
-			
+
 		# If the ship part doesn't have a random value set for the dispersal rotation give it one
 		if part.disperseRotation == 0:
 			part.disperseRotation = spinning_speeds.pick_random()
-			
+
 		# disperse the parts over time
 		part.position.x += part.disperseDirection.x * 1 * delta
 		part.position.y += part.disperseDirection.y * 1 * delta
 		# rotate the parts over time
 		part.rotation += part.disperseRotation * delta
-		
+
 		# Make the parts fade out
 		part.default_color.a8 -= 1
 ###
