@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://h0p7uq8vr1ew"]
+[gd_scene load_steps=7 format=3 uid="uid://h0p7uq8vr1ew"]
 
 [ext_resource type="Script" path="res://Scenes/Asteroids/asteroid_lg.gd" id="1_n7xb6"]
+[ext_resource type="Script" path="res://Scenes/Asteroids/asteroid.gd" id="2_6afdx"]
 [ext_resource type="Script" path="res://Scripts/Components/NavigateScreenComponent.gd" id="2_7vos3"]
 [ext_resource type="PackedScene" uid="uid://dtivktv8afc23" path="res://Scenes/DestructablePart/DestructablePart.tscn" id="2_ipb2n"]
 [ext_resource type="Script" path="res://Scripts/Components/DestructionComponent.gd" id="3_p1hul"]
@@ -9,13 +10,20 @@
 radius = 40.7922
 
 [node name="Asteroid-lg" type="Area2D"]
-position = Vector2(-2, 0)
+position = Vector2(-6, 0)
 script = ExtResource("1_n7xb6")
 
-[node name="NavigateScreenComponent" type="Node" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(6, 0)
+shape = SubResource("CircleShape2D_1y7wc")
+
+[node name="Asteroid" type="Node" parent="."]
+script = ExtResource("2_6afdx")
+
+[node name="NavigateScreenComponent" type="Node" parent="Asteroid"]
 script = ExtResource("2_7vos3")
 
-[node name="DestructionComponent" type="Node" parent="."]
+[node name="DestructionComponent" type="Node" parent="Asteroid"]
 script = ExtResource("3_p1hul")
 
 [node name="sideOne" parent="." instance=ExtResource("2_ipb2n")]
@@ -55,7 +63,3 @@ points = PackedVector2Array(-16, 64, 8, 64)
 [node name="sideOne9" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(0, -24)
 points = PackedVector2Array(-40, 32, -16, 64)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(6, 0)
-shape = SubResource("CircleShape2D_1y7wc")
