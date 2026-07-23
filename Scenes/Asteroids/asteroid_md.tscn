@@ -1,0 +1,63 @@
+[gd_scene load_steps=7 format=3 uid="uid://d052yixfo1gpx"]
+
+[ext_resource type="Script" path="res://Scenes/Asteroids/asteroid_md.gd" id="1_bdmvy"]
+[ext_resource type="Script" path="res://Scripts/Components/NavigateScreenComponent.gd" id="2_1rfxy"]
+[ext_resource type="Script" path="res://Scenes/Asteroids/asteroid.gd" id="2_r2fpe"]
+[ext_resource type="Script" path="res://Scripts/Components/DestructionComponent.gd" id="3_6qih7"]
+[ext_resource type="PackedScene" uid="uid://dtivktv8afc23" path="res://Scenes/DestructablePart/DestructablePart.tscn" id="4_esvsi"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_jajoh"]
+radius = 16.0
+height = 64.0
+
+[node name="Asteroid-md" type="Area2D"]
+position = Vector2(4, 0)
+script = ExtResource("1_bdmvy")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-4, 0)
+rotation = 1.57137
+shape = SubResource("CapsuleShape2D_jajoh")
+
+[node name="Asteroid" type="Node" parent="."]
+script = ExtResource("2_r2fpe")
+
+[node name="NavigateScreenComponent" type="Node" parent="Asteroid"]
+script = ExtResource("2_1rfxy")
+
+[node name="DestructionComponent" type="Node" parent="Asteroid"]
+script = ExtResource("3_6qih7")
+
+[node name="side1" parent="." instance=ExtResource("4_esvsi")]
+position = Vector2(-22, -16)
+rotation = 1.09852
+points = PackedVector2Array(0.154352, -17.8879, -3.63932, 7.12428)
+
+[node name="side2" parent="." instance=ExtResource("4_esvsi")]
+position = Vector2(46.7632, 34.6909)
+points = PackedVector2Array(-76.7632, -50.6909, -82.7632, -34.6909)
+
+[node name="side3" parent="." instance=ExtResource("4_esvsi")]
+position = Vector2(-1.23676, -21.3091)
+points = PackedVector2Array(-20.7632, 37.3091, -34.7632, 21.3091)
+
+[node name="side4" parent="." instance=ExtResource("4_esvsi")]
+position = Vector2(30.7632, -5.3091)
+points = PackedVector2Array(-2.7632, 13.3091, -20.7632, 21.3091)
+
+[node name="side5" parent="." instance=ExtResource("4_esvsi")]
+position = Vector2(-6, 24)
+points = PackedVector2Array(-16, -8, 16, -8)
+
+[node name="side6" parent="." instance=ExtResource("4_esvsi")]
+position = Vector2(6, 0)
+points = PackedVector2Array(-12, -16, -2, -24)
+
+[node name="side7" parent="." instance=ExtResource("4_esvsi")]
+points = PackedVector2Array(4, -24, 18, -16)
+
+[node name="side8" parent="." instance=ExtResource("4_esvsi")]
+points = PackedVector2Array(18, -16, 28, 8)
+
+[node name="side9" parent="." instance=ExtResource("4_esvsi")]
+points = PackedVector2Array(-6, -24, -6, -16)
