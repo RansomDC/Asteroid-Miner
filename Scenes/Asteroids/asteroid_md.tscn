@@ -59,5 +59,5 @@ points = PackedVector2Array(4, -24, 18, -16)
 [node name="side8" parent="." instance=ExtResource("4_esvsi")]
 points = PackedVector2Array(18, -16, 28, 8)
 
-[node name="side9" parent="side8" instance=ExtResource("4_esvsi")]
+[node name="side9" parent="." instance=ExtResource("4_esvsi")]
 points = PackedVector2Array(-6, -24, -6, -16)

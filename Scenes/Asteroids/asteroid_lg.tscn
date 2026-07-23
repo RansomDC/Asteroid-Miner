@@ -26,40 +26,40 @@ script = ExtResource("2_7vos3")
 [node name="DestructionComponent" type="Node" parent="Asteroid"]
 script = ExtResource("3_p1hul")
 
-[node name="sideOne" parent="." instance=ExtResource("2_ipb2n")]
+[node name="side1" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(-24, -32)
 rotation = 1.09852
 points = PackedVector2Array(3.79375, -25.0121, 3.48493, 10.7636)
 
-[node name="sideOne2" parent="." instance=ExtResource("2_ipb2n")]
+[node name="side2" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(46.7632, 34.6909)
 points = PackedVector2Array(1.23676, -26.6909, -22.7632, 5.3091)
 
-[node name="sideOne3" parent="." instance=ExtResource("2_ipb2n")]
+[node name="side3" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(-1.23676, -21.3091)
 points = PackedVector2Array(1.23676, -18.6909, 33.2368, -18.6909)
 
-[node name="sideOne4" parent="." instance=ExtResource("2_ipb2n")]
+[node name="side4" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(30.7632, -5.3091)
 points = PackedVector2Array(1.23676, -34.6909, 17.2368, 13.3091)
 
-[node name="sideOne5" parent="." instance=ExtResource("2_ipb2n")]
+[node name="side5" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(6.76324, 26.6909)
 points = PackedVector2Array(1.23676, -2.6909, 17.2368, 13.3091)
 
-[node name="sideOne6" parent="." instance=ExtResource("2_ipb2n")]
+[node name="side6" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(-80, -24)
 rotation = -2.36408
 points = PackedVector2Array(-50.9547, 5.25507, -34.2078, 33.6723)
 
-[node name="sideOne7" parent="." instance=ExtResource("2_ipb2n")]
+[node name="side7" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(-1.23676, -13.3091)
 points = PackedVector2Array(9.23676, 37.3091, 9.23676, 53.3091)
 
-[node name="sideOne8" parent="." instance=ExtResource("2_ipb2n")]
+[node name="side8" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(0, -24)
 points = PackedVector2Array(-16, 64, 8, 64)
 
-[node name="sideOne9" parent="." instance=ExtResource("2_ipb2n")]
+[node name="side9" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(0, -24)
 points = PackedVector2Array(-40, 32, -16, 64)
