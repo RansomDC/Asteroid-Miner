@@ -1,16 +1,17 @@
-[gd_scene load_steps=7 format=3 uid="uid://cuvxplv7nn65r"]
+[gd_scene load_steps=6 format=3 uid="uid://cuvxplv7nn65r"]
 
 [ext_resource type="Script" path="res://Scenes/Level/level.gd" id="1_dvyt8"]
 [ext_resource type="PackedScene" uid="uid://bovh403sqglwm" path="res://Scenes/Player/player.tscn" id="1_o2w7e"]
 [ext_resource type="PackedScene" uid="uid://d16hv2l0w6ouk" path="res://Scenes/DestructorPath/DestructorPath.tscn" id="2_fm8d4"]
 [ext_resource type="Script" path="res://Scenes/Level/PlayerSpawnLocation.gd" id="5_xyyed"]
-[ext_resource type="PackedScene" uid="uid://h0p7uq8vr1ew" path="res://Scenes/Asteroids/asteroid_lg.tscn" id="5_ym1m6"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_d5qsy"]
 radius = 64.0
 
 [node name="Level" type="Node"]
 script = ExtResource("1_dvyt8")
+
+[node name="Asteroids" type="Node" parent="."]
 
 [node name="Player" parent="." instance=ExtResource("1_o2w7e")]
 position = Vector2(960, 540)
@@ -68,6 +69,3 @@ text = "Shields:"
 modulate = Color(0.384314, 0.376471, 0.396078, 1)
 points = PackedVector2Array(0, 40, 1920, 40)
 width = 3.0
-
-[node name="Asteroid-lg" parent="." instance=ExtResource("5_ym1m6")]
-position = Vector2(832, 528)
