@@ -1,11 +1,18 @@
 class_name Level extends Node
 
+# Reference Nodes
 @onready var player = $Player
 @onready var playerSpawnArea = $PlayerSpawnPosition/PlayerSpawnLocation
-@onready var viewport = get_viewport()
 @onready var asteroids = $Asteroids
+@onready var lasers = $Lasers
+
+# Data
+@onready var viewport = get_viewport()
+
+# Preloads
 @onready var asteroid = preload("res://Scenes/Asteroids/asteroid_lg.tscn")
 
+# Variables
 var _lives := 3
 var num_asteroids = 3
 
@@ -48,3 +55,7 @@ func get_random_position():
 	#return a random screen position
 	var v = Vector2(randf_range(0, viewport.get_visible_rect().size.x), randf_range(0, viewport.get_visible_rect().size.y))
 	return v
+
+
+func _on_player_laser_fired(laser):
+	lasers.add_child(laser)
