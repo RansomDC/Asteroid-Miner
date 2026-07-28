@@ -48,4 +48,7 @@ script = ExtResource("3_xxf50")
 points = PackedVector2Array(0, -24, -8, 0)
 script = ExtResource("3_xxf50")
 
+[node name="Cannon" type="Node2D" parent="."]
+position = Vector2(0, -24)
+
 [connection signal="area_entered" from="PlayerArea" to="." method="_on_player_area_area_entered"]
