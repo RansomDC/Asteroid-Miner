@@ -1,7 +1,6 @@
 extends Node
 
 @onready var navigateScreen = $NavigateScreenComponent
-@onready var destructionComponent = $DestructionComponent
 @onready var a = get_parent()
 
 var movement_vector := Vector2(0,-1)

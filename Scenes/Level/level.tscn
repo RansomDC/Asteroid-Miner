@@ -13,6 +13,8 @@ script = ExtResource("1_dvyt8")
 
 [node name="Asteroids" type="Node" parent="."]
 
+[node name="Lasers" type="Node" parent="."]
+
 [node name="Player" parent="." instance=ExtResource("1_o2w7e")]
 position = Vector2(960, 540)
 
@@ -69,3 +71,5 @@ text = "Shields:"
 modulate = Color(0.384314, 0.376471, 0.396078, 1)
 points = PackedVector2Array(0, 40, 1920, 40)
 width = 3.0
+
+[connection signal="laser_fired" from="Player" to="." method="_on_player_laser_fired"]
