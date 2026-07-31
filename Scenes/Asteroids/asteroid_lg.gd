@@ -1,5 +1,8 @@
 class_name Asteroid_lg extends Destructor
 
+# Signals
+signal lg_destroyed(position)
+
 # Components
 @onready var destructionComponent = $DestructionComponent
 
@@ -14,3 +17,4 @@ func _on_area_entered(area):
 		area.queue_free()
 		collisionShape.set_deferred("disabled", true)
 		destructionComponent.destroy()
+		lg_destroyed.emit(self.global_position)

@@ -10,7 +10,8 @@ class_name Level extends Node
 @onready var viewport = get_viewport()
 
 # Preloads
-@onready var asteroid = preload("res://Scenes/Asteroids/asteroid_lg.tscn")
+@onready var asteroid_lg = preload("res://Scenes/Asteroids/asteroid_lg.tscn")
+@onready var asteroid_md = preload("res://Scenes/Asteroids/asteroid_md.tscn")
 
 # Variables
 var _lives := 3
@@ -30,8 +31,9 @@ func _ready():
 	
 	#This spawns asteroids in random positions when the level is loaded
 	for i in num_asteroids:
-		var new_asteroid = asteroid.instantiate()
+		var new_asteroid = asteroid_lg.instantiate()
 		new_asteroid.position = get_random_position()
+		new_asteroid.lg_destroyed.connect(_on_lg_asteroid_destroyed)
 		asteroids.add_child(new_asteroid)
 
 func _on_player_died():
@@ -48,6 +50,14 @@ func _on_player_died():
 		player.respawn()
 		player.global_position = playerSpawnArea.global_position
 	
+
+func _on_lg_asteroid_destroyed(position):
+	for i in 2:
+		var a = asteroid_md.instantiate()
+		a.position = position
+		asteroids.add_child(a)
+		
+
 
 # Helpers
 func get_random_position():
