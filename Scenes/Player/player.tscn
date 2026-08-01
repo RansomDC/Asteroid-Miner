@@ -1,11 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://bovh403sqglwm"]
+[gd_scene load_steps=6 format=3 uid="uid://bovh403sqglwm"]
 
 [ext_resource type="Script" path="res://Scenes/Player/player.gd" id="1_g0khc"]
 [ext_resource type="PackedScene" uid="uid://dtivktv8afc23" path="res://Scenes/DestructablePart/DestructablePart.tscn" id="2_e6nb8"]
 [ext_resource type="Script" path="res://Scenes/Player/PlayerDeathComponent.gd" id="2_qlfha"]
 [ext_resource type="Script" path="res://Scripts/Components/NavigateScreenComponent.gd" id="3_40cau"]
-[ext_resource type="Script" path="res://Scenes/DestructablePart/DestructablePart.gd" id="3_xxf50"]
-[ext_resource type="Script" path="res://Scripts/Components/DestructionComponent.gd" id="4_7tghn"]
+[ext_resource type="PackedScene" uid="uid://jo8srm7l1hhf" path="res://Scenes/destruction_component.tscn" id="4_0h3p5"]
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_g0khc")
@@ -16,8 +15,7 @@ script = ExtResource("2_qlfha")
 [node name="NavigateScreenComponent" type="Node" parent="."]
 script = ExtResource("3_40cau")
 
-[node name="DestructionComponent" type="Node" parent="."]
-script = ExtResource("4_7tghn")
+[node name="DestructionComponent" parent="." instance=ExtResource("4_0h3p5")]
 
 [node name="PlayerArea" type="Area2D" parent="."]
 
@@ -26,27 +24,21 @@ polygon = PackedVector2Array(0, -24, 16, 16, 0, 8, -16, 16)
 
 [node name="sideOne" parent="." instance=ExtResource("2_e6nb8")]
 points = PackedVector2Array(0, -24, 8, 0)
-script = ExtResource("3_xxf50")
 
 [node name="sideTwo" parent="." instance=ExtResource("2_e6nb8")]
 points = PackedVector2Array(8, 0, 16, 16)
-script = ExtResource("3_xxf50")
 
 [node name="sideThree" parent="." instance=ExtResource("2_e6nb8")]
 points = PackedVector2Array(0, 8, 16, 16)
-script = ExtResource("3_xxf50")
 
 [node name="sideFour" parent="." instance=ExtResource("2_e6nb8")]
 points = PackedVector2Array(-16, 16, 0, 8)
-script = ExtResource("3_xxf50")
 
 [node name="sideFive" parent="." instance=ExtResource("2_e6nb8")]
 points = PackedVector2Array(-8, 0, -16, 16)
-script = ExtResource("3_xxf50")
 
 [node name="sideSix" parent="." instance=ExtResource("2_e6nb8")]
 points = PackedVector2Array(0, -24, -8, 0)
-script = ExtResource("3_xxf50")
 
 [node name="Cannon" type="Node2D" parent="."]
 position = Vector2(0, -24)

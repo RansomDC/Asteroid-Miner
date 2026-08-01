@@ -2,6 +2,7 @@ extends Node
 
 @onready var destructable_object = get_parent()
 @onready var parts = getParts()
+@onready var timer = $Timer
 
 @export var destroyed = false
 
@@ -38,6 +39,7 @@ func _explode_action(delta):
 		
 		# Make the parts fade out
 		part.default_color.a8 -= 1
+			
 
 func getParts():
 	var parts = destructable_object.get_children()
@@ -49,6 +51,10 @@ func getParts():
 
 func destroy():
 	destroyed = true
+	timer.start(2.5)
 
 func regen():
 	destroyed = false
+
+func _on_timer_timeout():
+	destructable_object.queue_free()

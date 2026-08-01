@@ -12,6 +12,7 @@ class_name Level extends Node
 # Preloads
 @onready var asteroid_lg = preload("res://Scenes/Asteroids/asteroid_lg.tscn")
 @onready var asteroid_md = preload("res://Scenes/Asteroids/asteroid_md.tscn")
+@onready var asteroid_sm = preload("res://Scenes/Asteroids/asteroid_sm.tscn")
 
 # Variables
 var _lives := 3
@@ -54,10 +55,24 @@ func _on_player_died():
 func _on_lg_asteroid_destroyed(position):
 	for i in 2:
 		var a = asteroid_md.instantiate()
+		a.md_destroyed.connect(_on_md_asteroid_destroyed)
 		a.position = position
 		asteroids.add_child(a)
 		
 
+func _on_md_asteroid_destroyed(position):
+	for i in 2:
+		var a = asteroid_sm.instantiate()
+		a.position = position
+		asteroids.add_child(a)
+		
+
+#func _on_sm_asteroid_destroyed(position):
+#	for i in 2:
+#		var a = asteroid_md.instantiate()
+#		a.position = position
+#		asteroids.add_child(a)
+		
 
 # Helpers
 func get_random_position():

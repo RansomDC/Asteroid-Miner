@@ -9,8 +9,7 @@ signal lg_destroyed(position)
 # Node References
 @onready var collisionShape = $CollisionShape2D
 
-var asteroid_size = 90
-var speed := 50
+var asteroid_size = 80
 
 func _on_area_entered(area):
 	if area is Laser:
