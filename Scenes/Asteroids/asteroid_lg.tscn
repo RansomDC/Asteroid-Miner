@@ -1,15 +1,16 @@
-[gd_scene load_steps=7 format=3 uid="uid://h0p7uq8vr1ew"]
+[gd_scene load_steps=8 format=3 uid="uid://h0p7uq8vr1ew"]
 
 [ext_resource type="Script" path="res://Scenes/Asteroids/asteroid_lg.gd" id="1_n7xb6"]
 [ext_resource type="Script" path="res://Scenes/Asteroids/asteroid.gd" id="2_6afdx"]
 [ext_resource type="Script" path="res://Scripts/Components/NavigateScreenComponent.gd" id="2_7vos3"]
 [ext_resource type="PackedScene" uid="uid://dtivktv8afc23" path="res://Scenes/DestructablePart/DestructablePart.tscn" id="2_ipb2n"]
-[ext_resource type="Script" path="res://Scripts/Components/DestructionComponent.gd" id="3_p1hul"]
+[ext_resource type="PackedScene" uid="uid://jo8srm7l1hhf" path="res://Scenes/destruction_component.tscn" id="4_582ut"]
+[ext_resource type="Script" path="res://Scenes/DestructablePart/DestructablePart.gd" id="6_c3rkt"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1y7wc"]
 radius = 40.7922
 
-[node name="Asteroid-lg" type="Area2D"]
+[node name="AsteroidLg" type="Area2D"]
 position = Vector2(-6, 0)
 script = ExtResource("1_n7xb6")
 
@@ -23,43 +24,53 @@ script = ExtResource("2_6afdx")
 [node name="NavigateScreenComponent" type="Node" parent="Asteroid"]
 script = ExtResource("2_7vos3")
 
-[node name="DestructionComponent" type="Node" parent="Asteroid"]
-script = ExtResource("3_p1hul")
+[node name="DestructionComponent" parent="." instance=ExtResource("4_582ut")]
 
 [node name="side1" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(-24, -32)
 rotation = 1.09852
 points = PackedVector2Array(3.79375, -25.0121, 3.48493, 10.7636)
+script = ExtResource("6_c3rkt")
 
 [node name="side2" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(46.7632, 34.6909)
 points = PackedVector2Array(1.23676, -26.6909, -22.7632, 5.3091)
+script = ExtResource("6_c3rkt")
 
 [node name="side3" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(-1.23676, -21.3091)
 points = PackedVector2Array(1.23676, -18.6909, 33.2368, -18.6909)
+script = ExtResource("6_c3rkt")
 
 [node name="side4" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(30.7632, -5.3091)
 points = PackedVector2Array(1.23676, -34.6909, 17.2368, 13.3091)
+script = ExtResource("6_c3rkt")
 
 [node name="side5" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(6.76324, 26.6909)
 points = PackedVector2Array(1.23676, -2.6909, 17.2368, 13.3091)
+script = ExtResource("6_c3rkt")
 
 [node name="side6" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(-80, -24)
 rotation = -2.36408
 points = PackedVector2Array(-50.9547, 5.25507, -34.2078, 33.6723)
+script = ExtResource("6_c3rkt")
 
 [node name="side7" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(-1.23676, -13.3091)
 points = PackedVector2Array(9.23676, 37.3091, 9.23676, 53.3091)
+script = ExtResource("6_c3rkt")
 
 [node name="side8" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(0, -24)
 points = PackedVector2Array(-16, 64, 8, 64)
+script = ExtResource("6_c3rkt")
 
 [node name="side9" parent="." instance=ExtResource("2_ipb2n")]
 position = Vector2(0, -24)
 points = PackedVector2Array(-40, 32, -16, 64)
+script = ExtResource("6_c3rkt")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

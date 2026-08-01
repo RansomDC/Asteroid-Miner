@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://jo8srm7l1hhf"]
+
+[ext_resource type="Script" path="res://Scripts/Components/DestructionComponent.gd" id="1_18pvx"]
+
+[node name="DestructionComponent" type="Node"]
+script = ExtResource("1_18pvx")
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

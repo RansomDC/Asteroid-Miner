@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://Scenes/Asteroids/asteroid_sm.gd" id="1_qnki8"]
 [ext_resource type="Script" path="res://Scenes/Asteroids/asteroid.gd" id="2_4485a"]
 [ext_resource type="Script" path="res://Scripts/Components/NavigateScreenComponent.gd" id="2_o5h6t"]
-[ext_resource type="Script" path="res://Scripts/Components/DestructionComponent.gd" id="3_12ydq"]
 [ext_resource type="PackedScene" uid="uid://dtivktv8afc23" path="res://Scenes/DestructablePart/DestructablePart.tscn" id="4_4gl5e"]
+[ext_resource type="PackedScene" uid="uid://jo8srm7l1hhf" path="res://Scenes/destruction_component.tscn" id="4_c8cto"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tcfm2"]
 radius = 14.0
@@ -24,8 +24,7 @@ script = ExtResource("2_4485a")
 [node name="NavigateScreenComponent" type="Node" parent="Asteroid"]
 script = ExtResource("2_o5h6t")
 
-[node name="DestructionComponent" type="Node" parent="Asteroid"]
-script = ExtResource("3_12ydq")
+[node name="DestructionComponent" parent="." instance=ExtResource("4_c8cto")]
 
 [node name="side1" parent="." instance=ExtResource("4_4gl5e")]
 position = Vector2(-22, -16)
@@ -60,3 +59,5 @@ points = PackedVector2Array(12, -8, 12, 0)
 
 [node name="side9" parent="." instance=ExtResource("4_4gl5e")]
 points = PackedVector2Array(-11, -12, -4, -12)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

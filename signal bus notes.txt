@@ -1,0 +1,29 @@
+Signals are one of my favorite parts of Godot, but wiring Signals for “one-to-many” or “many-to-many” events can be time-consuming and difficult to maintain. For example, when an enemy dies there may be many other nodes that need to react: a game manager keeping score, a player with experience points, an enemy spawner, and so on. There may also be many types of nodes that could affect the score or experience points, and maintaining all these connections can become complex.
+
+One way to easily manage these kinds of Signals is through creating a Signal Bus, based on the Event Bus architecture pattern. It’s a single script that contains Signals for events that will need to be dispatched to many other nodes, allowing scripts to emit events without knowing (or caring) which other nodes are connected to the event, and vice-versa.
+
+Creating a Signal Bus is quick and simple. Add a new script and register it as an Autoload with “Global Variable” checked. Then, create any Signals you need there:
+
+SignalBus.gd
+
+extends Node
+
+# You can define any params to passthrough here if needed
+signal enemy_died(param, another_param)
+
+Now, in any script that would emit that event, do so to the Signal Bus directly:
+
+Enemy.gd
+
+func _whatever_function():
+    SignalBus.enemy_died.emit(something, something_else)
+
+Finally, all other scripts that needs to be aware of the event can connect to the Signal Bus’s Signal:
+
+GameManager.gd, Player.gd, EnemySpawner.gd, …
+
+func _ready():
+    SignalBus.enemy_died.connect(_on_enemy_died)
+
+func _on_enemy_died(param, another_param):
+    # Your code here…

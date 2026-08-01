@@ -2,6 +2,7 @@ extends Node
 
 @onready var destructable_object = get_parent()
 @onready var parts = getParts()
+@onready var timer = $Timer
 
 @export var destroyed = false
 
@@ -15,18 +16,18 @@ func _process(delta):
 		_explode_action(delta)
 
 func _explode_action(delta):
-	# First Make the ship stop moving
+	# First Make the object stop moving
 	destructable_object.velocity = Vector2.ZERO
-	# Set the ships rotation to default
+	# Set the objects rotation to default
 	destructable_object.rotation = 0
 	
 	# For each part, set the angle of its movement after death
 	for part in parts:
-		# If the ship part doesn't have a random value set for the dispersal direction give it one
+		# If the object's part doesn't have a random value set for the dispersal direction give it one
 		if part.disperseDirection == Vector2.ZERO:
 			part.disperseDirection = deathMomentumDirection + Vector2(rng.randf_range(-40, 40), rng.randf_range(-40, 40))
 			
-		# If the ship part doesn't have a random value set for the dispersal rotation give it one
+		# If the object's part doesn't have a random value set for the dispersal rotation give it one
 		if part.disperseRotation == 0:
 			part.disperseRotation = spinning_speeds.pick_random()
 			
@@ -38,6 +39,7 @@ func _explode_action(delta):
 		
 		# Make the parts fade out
 		part.default_color.a8 -= 1
+			
 
 func getParts():
 	var parts = destructable_object.get_children()
@@ -49,10 +51,10 @@ func getParts():
 
 func destroy():
 	destroyed = true
+	timer.start(2.5)
 
 func regen():
 	destroyed = false
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+func _on_timer_timeout():
+	destructable_object.queue_free()
