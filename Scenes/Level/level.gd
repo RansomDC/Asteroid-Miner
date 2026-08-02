@@ -10,6 +10,7 @@ class_name Level extends Node
 @onready var viewport = get_viewport()
 
 # Preloads
+@onready var player_ship = preload("res://Scenes/Player/player.tscn")
 @onready var asteroid_lg = preload("res://Scenes/Asteroids/asteroid_lg.tscn")
 @onready var asteroid_md = preload("res://Scenes/Asteroids/asteroid_md.tscn")
 @onready var asteroid_sm = preload("res://Scenes/Asteroids/asteroid_sm.tscn")
@@ -48,8 +49,11 @@ func _on_player_died():
 #		Check if the spawn area is free of asteroids
 		while !playerSpawnArea.is_empty:
 			await get_tree().create_timer(0.1).timeout
-		player.respawn()
-		player.global_position = playerSpawnArea.global_position
+		var ps = player_ship.instantiate()
+		ps.connect("died", _on_player_died)
+		ps.connect("laser_fired", _on_player_laser_fired)
+		ps.global_position = playerSpawnArea.global_position
+		self.add_child(ps)
 	
 
 func _on_lg_asteroid_destroyed(position):
@@ -65,13 +69,6 @@ func _on_md_asteroid_destroyed(position):
 		var a = asteroid_sm.instantiate()
 		a.position = position
 		asteroids.add_child(a)
-		
-
-#func _on_sm_asteroid_destroyed(position):
-#	for i in 2:
-#		var a = asteroid_md.instantiate()
-#		a.position = position
-#		asteroids.add_child(a)
 		
 
 # Helpers
