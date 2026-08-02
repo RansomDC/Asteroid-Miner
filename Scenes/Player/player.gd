@@ -23,9 +23,6 @@ var laser_scene = preload("res://Scenes/Laser/laser.tscn")
 @onready var cannon = $Cannon
 @onready var shipParts = destructionComponent.getParts()
 
-var rng = RandomNumberGenerator.new()
-var spinning_speeds = [-3, -2, 2, 3]
-
 var playerIsDead = false
 var deathMomentumDirection = Vector2.ZERO
 
@@ -68,9 +65,6 @@ func fire_laser():
 	l.global_position = cannon.global_position
 	l.rotation = rotation
 	emit_signal("laser_fired", l)
-
-
-
 #endregion
 
 func _on_player_area_area_entered(area):
@@ -85,22 +79,10 @@ func die(killer):
 		emit_signal("died")
 	# get killer (e.g. asteroid) angle of movenet
 	deathMomentumDirection = killer.velocity
-	collisionShape.set_deferred("disabled", true)
 	
 func respawn():
 	if playerIsDead:
 		playerIsDead = false
-		destructionComponent.regen()
 	
 	velocity = Vector2.ZERO
-	#re-enable the player
-	collisionShape.set_deferred("disabled", false)
 	
-	#Make the player visible and restore the ship parts
-	for part in shipParts:
-		part.position.x = 0
-		part.position.y =0
-		part.rotation = 0
-		part.default_color.a8 = 255
-		part.disperseDirection = Vector2.ZERO
-
