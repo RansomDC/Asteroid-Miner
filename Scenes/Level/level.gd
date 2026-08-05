@@ -5,6 +5,7 @@ class_name Level extends Node
 @onready var playerSpawnArea = $PlayerSpawnPosition/PlayerSpawnLocation
 @onready var asteroids = $Asteroids
 @onready var lasers = $Lasers
+@onready var ShieldBar = $Control/ShieldBar
 
 # Data
 @onready var viewport = get_viewport()
@@ -29,6 +30,7 @@ var lives:
 		return _lives
 
 func _ready():
+	ShieldBar.value = player.player_health
 	player.connect("died", _on_player_died)
 	
 	#This spawns asteroids in random positions when the level is loaded
@@ -38,6 +40,9 @@ func _ready():
 		new_asteroid.lg_destroyed.connect(_on_lg_asteroid_destroyed)
 		asteroids.add_child(new_asteroid)
 
+###
+# signal callbacks
+###
 func _on_player_died():
 	lives -= 1
 	if lives <= 0:
@@ -52,8 +57,12 @@ func _on_player_died():
 		var ps = player_ship.instantiate()
 		ps.connect("died", _on_player_died)
 		ps.connect("laser_fired", _on_player_laser_fired)
+		ps.connect("player_hit", _on_player_player_hit)
 		ps.global_position = playerSpawnArea.global_position
 		self.add_child(ps)
+
+func _on_player_laser_fired(laser):
+	lasers.add_child(laser)
 	
 
 func _on_lg_asteroid_destroyed(position):
@@ -71,7 +80,9 @@ func _on_md_asteroid_destroyed(position):
 		asteroids.add_child(a)
 		
 
+###
 # Helpers
+###
 func get_random_position():
 	randomize()
 	#return a random screen position
@@ -79,5 +90,5 @@ func get_random_position():
 	return v
 
 
-func _on_player_laser_fired(laser):
-	lasers.add_child(laser)
+func _on_player_player_hit(health):
+	ShieldBar.value = health
