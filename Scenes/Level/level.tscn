@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://cuvxplv7nn65r"]
+[gd_scene load_steps=7 format=3 uid="uid://cuvxplv7nn65r"]
 
 [ext_resource type="Script" path="res://Scenes/Level/level.gd" id="1_dvyt8"]
 [ext_resource type="PackedScene" uid="uid://bovh403sqglwm" path="res://Scenes/Player/player.tscn" id="1_o2w7e"]
 [ext_resource type="PackedScene" uid="uid://d16hv2l0w6ouk" path="res://Scenes/DestructorPath/DestructorPath.tscn" id="2_fm8d4"]
+[ext_resource type="Script" path="res://Scenes/Level/ShieldBar.gd" id="5_x1u2m"]
 [ext_resource type="Script" path="res://Scenes/Level/PlayerSpawnLocation.gd" id="5_xyyed"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_d5qsy"]
@@ -67,9 +68,21 @@ offset_right = 484.0
 offset_bottom = 34.0
 text = "Shields:"
 
+[node name="ShieldBar" type="ProgressBar" parent="Control"]
+layout_mode = 0
+offset_left = 496.0
+offset_top = 8.0
+offset_right = 600.0
+offset_bottom = 32.0
+max_value = 3.0
+step = 1.0
+show_percentage = false
+script = ExtResource("5_x1u2m")
+
 [node name="Line2D" type="Line2D" parent="Control"]
 modulate = Color(0.384314, 0.376471, 0.396078, 1)
 points = PackedVector2Array(0, 40, 1920, 40)
 width = 3.0
 
 [connection signal="laser_fired" from="Player" to="." method="_on_player_laser_fired"]
+[connection signal="player_hit" from="Player" to="." method="_on_player_player_hit"]

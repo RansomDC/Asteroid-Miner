@@ -2,6 +2,7 @@ class_name Player extends CharacterBody2D
 
 # Signals
 signal laser_fired(laser)
+signal player_hit(health)
 signal died
 
 @export var MAX_SPEED = 540
@@ -10,17 +11,20 @@ signal died
 @export var explode_rotation = 3
 @export var rotation_direction = 0
 @export var ship_size = 45
+@export var player_health := 3
 
 # Components
 @onready var playerDeath = $PlayerDeathComponent
 @onready var navigateScreen = $NavigateScreenComponent
 @onready var destructionComponent = $DestructionComponent
 
+# Node References
+@onready var collisionShape = $PlayerArea/PlayerCollisionPoly
+@onready var cannon = $Cannon
+
 # Preloads
 var laser_scene = preload("res://Scenes/Laser/laser.tscn")
 
-@onready var collisionShape = $PlayerArea/PlayerCollisionPoly
-@onready var cannon = $Cannon
 @onready var shipParts = destructionComponent.getParts()
 
 var playerIsDead = false
@@ -70,7 +74,10 @@ func fire_laser():
 func _on_player_area_area_entered(area):
 	print(area.get_class())
 	if (area is Destructor) && (!playerIsDead):
-		die(area)
+		player_health -= 1
+		emit_signal("player_hit", player_health)
+		if player_health < 0:
+			die(area)
 
 func die(killer):
 	if !playerIsDead:
