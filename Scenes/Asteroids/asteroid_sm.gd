@@ -11,4 +11,5 @@ var asteroid_size = 32
 func _on_area_entered(area):
 	if area is Laser:
 		area.queue_free()
+		collisionShape.set_deferred("disabled", true)
 		destructionComponent.destroy()
