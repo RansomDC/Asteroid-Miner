@@ -2,6 +2,7 @@ class_name Level extends Node
 
 # Reference Nodes
 @onready var player = $Player
+@onready var player_collisions_shape = $Player/PlayerArea/PlayerCollisionPoly
 @onready var playerSpawnArea = $PlayerSpawnPosition/PlayerSpawnLocation
 @onready var asteroids = $Asteroids
 @onready var lasers = $Lasers
@@ -92,3 +93,6 @@ func get_random_position():
 
 func _on_player_player_hit(health):
 	ShieldBar.value = health
+	player_collisions_shape.set_deferred("disabled", true)
+	await get_tree().create_timer(0.5).timeout
+	player_collisions_shape.set_deferred("disabled", false)

@@ -72,7 +72,6 @@ func fire_laser():
 #endregion
 
 func _on_player_area_area_entered(area):
-	print(area.get_class())
 	if (area is Destructor) && (!playerIsDead):
 		player_health -= 1
 		emit_signal("player_hit", player_health)
