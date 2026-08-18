@@ -64,6 +64,8 @@ func _on_player_died():
 		ps.connect("laser_fired", _on_player_laser_fired)
 		ps.connect("player_hit", _on_player_player_hit)
 		ps.global_position = playerSpawnArea.global_position
+		ps.player_health = 3
+		ShieldBar.value = ps.player_health
 		
 		# spawn player node
 		self.add_child(ps)
