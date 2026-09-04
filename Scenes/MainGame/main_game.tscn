@@ -1,7 +1,10 @@
-[gd_scene format=3 uid="uid://cy6libpf1ub3r"]
+[gd_scene load_steps=2 format=3 uid="uid://cy6libpf1ub3r"]
+
+[ext_resource type="Script" path="res://Scenes/MainGame/main_game.gd" id="1_3bw54"]
 
 [node name="Main Game" type="Node"]
 process_mode = 3
+script = ExtResource("1_3bw54")
 
 [node name="Systems" type="Node" parent="."]
 
