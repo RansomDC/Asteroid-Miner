@@ -1,4 +1,4 @@
-class_name Level extends Node
+class_name Level extends BaseLevel
 
 # Reference Nodes
 @onready var playerSpawnArea = $PlayerSpawnPosition/PlayerSpawnLocation
@@ -111,3 +111,4 @@ func get_player():
 	for child in self.get_children():
 		if child is Player:
 			return child
+
