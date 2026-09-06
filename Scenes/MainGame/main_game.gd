@@ -6,24 +6,29 @@ extends Node
 
 
 # TODO: main menu
-const LEVEL_SCENE_UID  :String = "uid://cuvxplv7nn65r"
-const PLAYER_SCENE_UID :String = "uid://bovh403sqglwm"
+const LEVEL_SCENE_UID  : String = "uid://cuvxplv7nn65r"
+const PLAYER_SCENE_UID : String = "uid://bovh403sqglwm"
+const HUD_SCENE_UID    : String = "uid://dnof5csgfeu1f"
 
 var player         : Player = null
 var _current_level : BaseLevel = null
+var hud            : Control = null
+
 
 # Game World root nodes
-@onready var level_root  :Node2D = $World/LevelRoot
-@onready var entity_root :Node2D = $World/EntityRoot
-@onready var effect_root :Node2D = $World/EffectRoot
+@onready var level_root  : Node2D = $World/LevelRoot
+@onready var entity_root : Node2D = $World/EntityRoot
+@onready var effect_root : Node2D = $World/EffectRoot
 
 # UI Root Nodes
-@onready var hud_root        :Control = $HudLayer/HudRoot
-@onready var pause_root      :Control = $PauseLayer/PauseRoot
-@onready var transition_root :Control = $TransitionLayer/TransitionRoot
+@onready var hud_root        : Control = $HudLayer/HudRoot
+@onready var pause_root      : Control = $PauseLayer/PauseRoot
+@onready var transition_root : Control = $TransitionLayer/TransitionRoot
 
 func _ready() -> void:
 	_init_player()
+	
+	_init_hud()
 	
 	load_level(LEVEL_SCENE_UID)
 
@@ -39,7 +44,19 @@ func _init_player() -> void:
 		return
 	
 	entity_root.add_child(player)
+
+func _init_hud() -> void:
+	var hud_scene : PackedScene = ResourceLoader.load(HUD_SCENE_UID) as PackedScene
+	if hud_scene == null:
+		push_error("Could not load hudscene: " + HUD_SCENE_UID)
+		return
 	
+	hud = hud_scene.instantiate() as Control
+	if hud == null:
+		push_error("Loaded hud scene does not extend Control or DNE: " + HUD_SCENE_UID)
+		return
+	
+	hud_root.add_child(hud)
 
 ## Called for loading a level scene.
 ## NOTE: The input level_scene must extend BaseLevel

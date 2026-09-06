@@ -24,16 +24,14 @@ var player_collision_shape
 var lives:
 	set(value):
 		_lives = value
-		#TODO: implement HUD
-		#hud.lives = _lives
-		#hud.init_lives(_lives)
 	get:
 		return _lives
 
 func _ready():
 	player = $Player
 	player_collision_shape = $Player/PlayerArea/PlayerCollisionPoly
-	ShieldBar.value = player.player_health
+	## TODO: Fix Hud stuff for new arch
+	##ShieldBar.value = player.player_health
 	player.connect("died", _on_player_died)
 	
 	#This spawns asteroids in random positions when the level is loaded
