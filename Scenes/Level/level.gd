@@ -4,7 +4,6 @@ class_name Level extends BaseLevel
 @onready var playerSpawnArea = $PlayerSpawnPosition/PlayerSpawnLocation
 @onready var asteroids = $Asteroids
 @onready var lasers = $Lasers
-@onready var ShieldBar = $Control/ShieldBar
 
 # Data
 @onready var viewport = get_viewport()
@@ -63,7 +62,8 @@ func _on_player_died():
 		ps.connect("player_hit", _on_player_player_hit)
 		ps.global_position = playerSpawnArea.global_position
 		ps.player_health = 3
-		ShieldBar.value = ps.player_health
+		## TODO: Broken when moving HUD to hudroot, fix or remove later
+		##ShieldBar.value = ps.player_health
 		
 		# spawn player node
 		self.add_child(ps)
@@ -91,7 +91,8 @@ func _on_md_asteroid_destroyed(position):
 		
 
 func _on_player_player_hit(health):
-	ShieldBar.value = health
+	## TODO: this was broken when moving the HUD to entityroot, probably remove it altogether.
+	##ShieldBar.value = health
 	player_collision_shape.set_deferred("disabled", true)
 	await get_tree().create_timer(0.5).timeout
 	player_collision_shape.set_deferred("disabled", false)
