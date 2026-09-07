@@ -11,8 +11,10 @@ const PLAYER_SCENE_UID : String = "uid://bovh403sqglwm"
 const HUD_SCENE_UID    : String = "uid://dnof5csgfeu1f"
 
 var player         : Player = null
-var _current_level : BaseLevel = null
+var asteroid       : Destructor = null
 var hud            : Control = null
+
+var _current_level : BaseLevel = null
 
 
 # Game World root nodes
@@ -25,7 +27,11 @@ var hud            : Control = null
 @onready var pause_root      : Control = $PauseLayer/PauseRoot
 @onready var transition_root : Control = $TransitionLayer/TransitionRoot
 
+#preload Scenes
+@onready var asteroid_lg = preload("res://Scenes/Asteroids/asteroid_lg.tscn")
+
 func _ready() -> void:
+	
 	_init_player()
 	
 	_init_hud()
@@ -81,6 +87,8 @@ func _deferred_load_level(level_scene_uid : String) -> void:
 		#TODO (main menu) : Should have fall back scene
 	
 	_current_level = new_level_packed.instantiate() as BaseLevel
+
+	_current_level.request_lg_ass_spawn.connect(_on_request_lg_ass_spawn)
 	
 	level_root.add_child(_current_level)
 	
@@ -102,7 +110,11 @@ func _place_player_at_level_spawn() -> void:
 	
 	player.global_position = _current_level.get_default_player_spawn()
 
-
+func _on_request_lg_ass_spawn(locations):
+	for location in locations:
+		var new_asteroid = asteroid_lg.instantiate()
+		new_asteroid.position = location
+		entity_root.add_child(new_asteroid)
 
 
 

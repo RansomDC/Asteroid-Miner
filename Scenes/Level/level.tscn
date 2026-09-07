@@ -17,9 +17,11 @@ script = ExtResource("1_dvyt8")
 [node name="Lasers" type="Node" parent="."]
 
 [node name="Player" parent="." instance=ExtResource("1_o2w7e")]
+visible = false
 position = Vector2(960, 540)
 
 [node name="DestructorPath" parent="." instance=ExtResource("2_fm8d4")]
+visible = false
 
 [node name="PlayerSpawnPosition" type="Node2D" parent="."]
 position = Vector2(960, 540)
