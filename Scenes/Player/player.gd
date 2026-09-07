@@ -14,7 +14,6 @@ signal died
 @export var player_health := 3
 
 # Components
-@onready var playerDeath = $PlayerDeathComponent
 @onready var navigateScreen = $NavigateScreenComponent
 @onready var destructionComponent = $DestructionComponent
 

@@ -4,7 +4,6 @@ class_name Level extends BaseLevel
 @onready var playerSpawnArea = $PlayerSpawnPosition/PlayerSpawnLocation
 @onready var asteroids = $Asteroids
 @onready var lasers = $Lasers
-@onready var ShieldBar = $Control/ShieldBar
 
 # Data
 @onready var viewport = get_viewport()
@@ -24,16 +23,14 @@ var player_collision_shape
 var lives:
 	set(value):
 		_lives = value
-		#TODO: implement HUD
-		#hud.lives = _lives
-		#hud.init_lives(_lives)
 	get:
 		return _lives
 
 func _ready():
 	player = $Player
 	player_collision_shape = $Player/PlayerArea/PlayerCollisionPoly
-	ShieldBar.value = player.player_health
+	## TODO: Fix Hud stuff for new arch
+	##ShieldBar.value = player.player_health
 	player.connect("died", _on_player_died)
 	
 	#This spawns asteroids in random positions when the level is loaded
@@ -65,7 +62,8 @@ func _on_player_died():
 		ps.connect("player_hit", _on_player_player_hit)
 		ps.global_position = playerSpawnArea.global_position
 		ps.player_health = 3
-		ShieldBar.value = ps.player_health
+		## TODO: Broken when moving HUD to hudroot, fix or remove later
+		##ShieldBar.value = ps.player_health
 		
 		# spawn player node
 		self.add_child(ps)
@@ -93,7 +91,8 @@ func _on_md_asteroid_destroyed(position):
 		
 
 func _on_player_player_hit(health):
-	ShieldBar.value = health
+	## TODO: this was broken when moving the HUD to entityroot, probably remove it altogether.
+	##ShieldBar.value = health
 	player_collision_shape.set_deferred("disabled", true)
 	await get_tree().create_timer(0.5).timeout
 	player_collision_shape.set_deferred("disabled", false)
