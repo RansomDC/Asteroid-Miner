@@ -15,22 +15,23 @@ signal request_lg_ass_spawn(positions: Array)
 @export var num_asteroids = 3
 
 func _ready():
-	emit_signal("request_lg_ass_spawn", _get_random_positions(num_asteroids))
+	request_lg_ass_spawn.emit(_get_random_positions(num_asteroids))
 
 # Helpers
 ###
-func get_random_position() -> Vector2:
-	randomize()
-	#return a random screen position. TODO: Update this to not spawn asteroids near the player's spawn location
-	var v = Vector2(randf_range(0, viewport.get_visible_rect().size.x), randf_range(0, viewport.get_visible_rect().size.y))
-	return v
-
 func _get_random_positions(count) -> Array:
 	var positions = []
 	for i in count:
 		positions.append(get_random_position())
 	print(positions)
 	return positions
+	
+func get_random_position() -> Vector2:
+	randomize()
+	#return a random screen position. TODO: Update this to not spawn asteroids near the player's spawn location
+	var v = Vector2(randf_range(0, viewport.get_visible_rect().size.x), randf_range(0, viewport.get_visible_rect().size.y))
+	return v
+
 
 
 ## Reference Nodes

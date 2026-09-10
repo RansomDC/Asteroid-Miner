@@ -16,6 +16,8 @@ var hud            : Control = null
 
 var _current_level : BaseLevel = null
 
+# Main Game
+@onready var main_game   : Node = $MainGame
 
 # Game World root nodes
 @onready var level_root  : Node2D = $World/LevelRoot
@@ -27,16 +29,19 @@ var _current_level : BaseLevel = null
 @onready var pause_root      : Control = $PauseLayer/PauseRoot
 @onready var transition_root : Control = $TransitionLayer/TransitionRoot
 
-#preload Scenes
+# Preload Scenes
 @onready var asteroid_lg = preload("res://Scenes/Asteroids/asteroid_lg.tscn")
+@onready var asteroid_md = preload("res://Scenes/Asteroids/asteroid_md.tscn")
+@onready var asteroid_sm = preload("res://Scenes/Asteroids/asteroid_sm.tscn")
+
 
 func _ready() -> void:
-	
 	_init_player()
 	
 	_init_hud()
 	
 	load_level(LEVEL_SCENE_UID)
+	
 
 func _init_player() -> void:
 	var player_scene : PackedScene = ResourceLoader.load(PLAYER_SCENE_UID) as PackedScene
@@ -110,13 +115,26 @@ func _place_player_at_level_spawn() -> void:
 	
 	player.global_position = _current_level.get_default_player_spawn()
 
-func _on_request_lg_ass_spawn(locations):
+func _on_request_lg_ass_spawn(locations : Array):
 	for location in locations:
 		var new_asteroid = asteroid_lg.instantiate()
+		new_asteroid.parent_asteroid_destroyed.connect(_on_parent_ass_destroyed)
 		new_asteroid.position = location
 		entity_root.add_child(new_asteroid)
 
-
+func _on_parent_ass_destroyed(position : Vector2, asteroidType : Destructor):
+	if asteroidType is Asteroid_lg:
+		for asteroid in 2:
+			var new_asteroid = asteroid_md.instantiate()
+			new_asteroid.parent_asteroid_destroyed.connect(_on_parent_ass_destroyed)
+			new_asteroid.position = position
+			entity_root.add_child(new_asteroid)
+			
+	if asteroidType is Asteroid_md:
+		for asteroid in 2:
+			var new_asteroid = asteroid_sm.instantiate()
+			new_asteroid.position = position
+			entity_root.add_child(new_asteroid)
 
 
 
