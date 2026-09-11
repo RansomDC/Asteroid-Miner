@@ -16,9 +16,6 @@ var hud            : Control = null
 
 var _current_level : BaseLevel = null
 
-# Main Game
-@onready var main_game   : Node = $MainGame
-
 # Game World root nodes
 @onready var level_root  : Node2D = $World/LevelRoot
 @onready var entity_root : Node2D = $World/EntityRoot
@@ -33,6 +30,7 @@ var _current_level : BaseLevel = null
 @onready var asteroid_lg = preload("res://Scenes/Asteroids/asteroid_lg.tscn")
 @onready var asteroid_md = preload("res://Scenes/Asteroids/asteroid_md.tscn")
 @onready var asteroid_sm = preload("res://Scenes/Asteroids/asteroid_sm.tscn")
+@onready var laser       = preload("res://Scenes/Laser/laser.tscn")
 
 
 func _ready() -> void:
@@ -50,6 +48,7 @@ func _init_player() -> void:
 		return
 	
 	player = player_scene.instantiate() as Player
+	player.laser_fired.connect(_on_laser_fired)
 	if player == null:
 		push_error("Loaded player scene does not extend player or DNE: " + PLAYER_SCENE_UID)
 		return
@@ -115,6 +114,12 @@ func _place_player_at_level_spawn() -> void:
 	
 	player.global_position = _current_level.get_default_player_spawn()
 
+func _on_laser_fired(position : Vector2, rotation : float):
+	var l = laser.instantiate()
+	l.global_position = position
+	l.rotation = rotation
+	entity_root.add_child(l)
+
 func _on_request_lg_ass_spawn(locations : Array):
 	for location in locations:
 		var new_asteroid = asteroid_lg.instantiate()
@@ -124,17 +129,17 @@ func _on_request_lg_ass_spawn(locations : Array):
 
 func _on_parent_ass_destroyed(position : Vector2, asteroidType : Destructor):
 	if asteroidType is Asteroid_lg:
-		for asteroid in 2:
+		for ass in 2:
 			var new_asteroid = asteroid_md.instantiate()
 			new_asteroid.parent_asteroid_destroyed.connect(_on_parent_ass_destroyed)
 			new_asteroid.position = position
-			entity_root.add_child(new_asteroid)
+			entity_root.call_deferred("add_child", new_asteroid)
 			
 	if asteroidType is Asteroid_md:
-		for asteroid in 2:
+		for ass in 2:
 			var new_asteroid = asteroid_sm.instantiate()
 			new_asteroid.position = position
-			entity_root.add_child(new_asteroid)
+			entity_root.call_deferred("add_child", new_asteroid)
 
 
 

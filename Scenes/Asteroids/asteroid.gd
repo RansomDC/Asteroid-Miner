@@ -18,8 +18,3 @@ func _physics_process(delta):
 		a.get_viewport_rect().size, 
 		a.global_position, 
 		a.asteroid_size)
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass

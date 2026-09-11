@@ -1,7 +1,7 @@
 class_name Player extends CharacterBody2D
 
 # Signals
-signal laser_fired(laser)
+signal laser_fired(position : Vector2, rotation : float)
 signal player_hit(health)
 signal died
 
@@ -64,10 +64,12 @@ func navScreen():
 
 #region Laser
 func fire_laser():
-	var l = laser_scene.instantiate()
-	l.global_position = cannon.global_position
-	l.rotation = rotation
-	emit_signal("laser_fired", l)
+	# Now we do this stuff in mainGame
+#	var l = laser_scene.instantiate()
+#	l.global_position = cannon.global_position
+#	l.rotation = rotation
+	emit_signal("laser_fired", cannon.global_position, rotation)
+	print(cannon.global_position, rotation)
 #endregion
 
 func _on_player_area_area_entered(area):
