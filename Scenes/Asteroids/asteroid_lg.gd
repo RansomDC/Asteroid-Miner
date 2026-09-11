@@ -1,7 +1,7 @@
 class_name Asteroid_lg extends Destructor
 
 # Signals
-signal lg_destroyed(position)
+signal parent_asteroid_destroyed(position : Vector2, assType : Destructor)
 
 # Components
 @onready var destructionComponent = $DestructionComponent
@@ -16,11 +16,10 @@ func _on_area_entered(area):
 		area.queue_free()
 		destroy()
 	
-	
 	if area.get_parent() is Player:
 		destroy()
 
 func destroy():
 		collisionShape.set_deferred("disabled", true)
 		destructionComponent.destroy()
-		lg_destroyed.emit(self.global_position)
+		parent_asteroid_destroyed.emit(self.global_position, self)
