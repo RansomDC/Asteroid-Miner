@@ -16,6 +16,8 @@ var hud            : Control = null
 
 var _current_level : BaseLevel = null
 
+var rng = RandomNumberGenerator.new()
+
 # Game World root nodes
 @onready var level_root  : Node2D = $World/LevelRoot
 @onready var entity_root : Node2D = $World/EntityRoot
@@ -32,6 +34,10 @@ var _current_level : BaseLevel = null
 @onready var asteroid_sm = preload("res://Scenes/Asteroids/asteroid_sm.tscn")
 @onready var laser       = preload("res://Scenes/Laser/laser.tscn")
 
+# State
+@export var score : int = 0
+@export var lives: int = 3
+@export var money: int = 0
 
 func _ready() -> void:
 	_init_player()
@@ -49,11 +55,12 @@ func _init_player() -> void:
 	
 	player = player_scene.instantiate() as Player
 	player.laser_fired.connect(_on_laser_fired)
+	player.died.connect(_on_player_died)
 	if player == null:
 		push_error("Loaded player scene does not extend player or DNE: " + PLAYER_SCENE_UID)
 		return
 	
-	entity_root.add_child(player)
+	entity_root.call_deferred("add_child", player)
 
 func _init_hud() -> void:
 	var hud_scene : PackedScene = ResourceLoader.load(HUD_SCENE_UID) as PackedScene
@@ -124,24 +131,37 @@ func _on_request_lg_ass_spawn(locations : Array):
 	for location in locations:
 		var new_asteroid = asteroid_lg.instantiate()
 		new_asteroid.parent_asteroid_destroyed.connect(_on_parent_ass_destroyed)
+		new_asteroid.update_score.connect(_on_update_score)
 		new_asteroid.position = location
 		entity_root.add_child(new_asteroid)
 
 func _on_parent_ass_destroyed(position : Vector2, asteroidType : Destructor):
 	if asteroidType is Asteroid_lg:
-		for ass in 2:
+		for ass in rng.randf_range(2, 3):
 			var new_asteroid = asteroid_md.instantiate()
 			new_asteroid.parent_asteroid_destroyed.connect(_on_parent_ass_destroyed)
+			new_asteroid.update_score.connect(_on_update_score)
 			new_asteroid.position = position
 			entity_root.call_deferred("add_child", new_asteroid)
 			
 	if asteroidType is Asteroid_md:
-		for ass in 2:
+		for ass in rng.randf_range(2, 4):
 			var new_asteroid = asteroid_sm.instantiate()
 			new_asteroid.position = position
 			entity_root.call_deferred("add_child", new_asteroid)
 
+func _on_update_score(points : int):
+	score += points
 
+func _on_player_died():
+	lives -= 1
+	
+	if lives < 1:
+		# Show game over screen
+		pass
+	else:
+		_init_player()
+		_place_player_at_level_spawn()
 
 
 
