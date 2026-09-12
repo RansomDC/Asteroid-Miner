@@ -4,7 +4,6 @@ extends Node
 ## Main entry point for the game.
 ## Responsible for setting up teh World layers and coordinating high-level systems
 
-
 # TODO: main menu
 const LEVEL_SCENE_UID  : String = "uid://cuvxplv7nn65r"
 const PLAYER_SCENE_UID : String = "uid://bovh403sqglwm"
@@ -69,6 +68,7 @@ func _init_hud() -> void:
 		return
 	
 	hud = hud_scene.instantiate() as Control
+	
 	if hud == null:
 		push_error("Loaded hud scene does not extend Control or DNE: " + HUD_SCENE_UID)
 		return
@@ -130,25 +130,27 @@ func _on_laser_fired(position : Vector2, rotation : float):
 func _on_request_lg_ass_spawn(locations : Array):
 	for location in locations:
 		var new_asteroid = asteroid_lg.instantiate()
-		new_asteroid.parent_asteroid_destroyed.connect(_on_parent_ass_destroyed)
-		new_asteroid.update_score.connect(_on_update_score)
+		new_asteroid.asteroid_destroyed.connect(_on_ass_destroyed)
 		new_asteroid.position = location
 		entity_root.add_child(new_asteroid)
 
-func _on_parent_ass_destroyed(position : Vector2, asteroidType : Destructor):
+func _on_ass_destroyed(position : Vector2, asteroidType : Destructor):
 	if asteroidType is Asteroid_lg:
+		update_score(150)
 		for ass in rng.randf_range(2, 3):
 			var new_asteroid = asteroid_md.instantiate()
-			new_asteroid.parent_asteroid_destroyed.connect(_on_parent_ass_destroyed)
-			new_asteroid.update_score.connect(_on_update_score)
+			new_asteroid.asteroid_destroyed.connect(_on_ass_destroyed)
 			new_asteroid.position = position
 			entity_root.call_deferred("add_child", new_asteroid)
-			
-	if asteroidType is Asteroid_md:
+	elif asteroidType is Asteroid_md:
+		update_score(100)
 		for ass in rng.randf_range(2, 4):
 			var new_asteroid = asteroid_sm.instantiate()
+			new_asteroid.asteroid_destroyed.connect(_on_ass_destroyed)
 			new_asteroid.position = position
 			entity_root.call_deferred("add_child", new_asteroid)
+	elif asteroidType is Asteroid_sm:
+		update_score(50)
 
 func _on_update_score(points : int):
 	score += points
@@ -163,7 +165,9 @@ func _on_player_died():
 		_init_player()
 		_place_player_at_level_spawn()
 
-
+func update_score(points : int):
+	score += points
+	hud.update_score_label(score)
 
 
 

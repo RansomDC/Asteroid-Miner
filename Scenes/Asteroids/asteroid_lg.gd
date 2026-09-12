@@ -1,7 +1,7 @@
 class_name Asteroid_lg extends Destructor
 
 # Signals
-signal parent_asteroid_destroyed(position : Vector2, assType : Destructor)
+signal asteroid_destroyed(position : Vector2, assType : Destructor)
 signal update_score(points : int)
 
 # Components
@@ -23,5 +23,4 @@ func _on_area_entered(area):
 func destroy():
 		collisionShape.set_deferred("disabled", true)
 		destructionComponent.destroy()
-		parent_asteroid_destroyed.emit(self.global_position, self)
-		update_score.emit(150)
+		asteroid_destroyed.emit(self.global_position, self)
