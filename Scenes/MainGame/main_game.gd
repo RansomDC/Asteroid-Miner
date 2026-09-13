@@ -68,12 +68,13 @@ func _init_hud() -> void:
 		return
 	
 	hud = hud_scene.instantiate() as Control
-	
 	if hud == null:
 		push_error("Loaded hud scene does not extend Control or DNE: " + HUD_SCENE_UID)
 		return
 	
 	hud_root.add_child(hud)
+	hud.update_lives_label(lives)
+	hud.update_score_label(0)
 
 ## Called for loading a level scene.
 ## NOTE: The input level_scene must extend BaseLevel
@@ -157,6 +158,7 @@ func _on_update_score(points : int):
 
 func _on_player_died():
 	lives -= 1
+	hud.update_lives_label(lives)
 	
 	if lives < 1:
 		# Show game over screen
