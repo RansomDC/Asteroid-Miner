@@ -39,9 +39,9 @@ var rng = RandomNumberGenerator.new()
 @export var money: int = 0
 
 func _ready() -> void:
-	_init_player()
-	
 	_init_hud()
+	
+	_init_player()
 	
 	load_level(LEVEL_SCENE_UID)
 	
@@ -53,11 +53,17 @@ func _init_player() -> void:
 		return
 	
 	player = player_scene.instantiate() as Player
-	player.laser_fired.connect(_on_laser_fired)
-	player.died.connect(_on_player_died)
 	if player == null:
 		push_error("Loaded player scene does not extend player or DNE: " + PLAYER_SCENE_UID)
 		return
+	
+	# TODO: make a setup() method for easier setting of Player properties
+	player.health = 3
+	
+	# Connecting Player Signals
+	player.update_health.connect(_on_update_health)
+	player.laser_fired.connect(_on_laser_fired)
+	player.died.connect(_on_player_died)
 	
 	entity_root.call_deferred("add_child", player)
 
@@ -155,6 +161,9 @@ func _on_ass_destroyed(position : Vector2, asteroidType : Destructor):
 
 func _on_update_score(points : int):
 	score += points
+
+func _on_update_health(health : int):
+	hud.update_shield_bar(health)
 
 func _on_player_died():
 	lives -= 1

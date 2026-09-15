@@ -2,16 +2,15 @@ class_name Player extends CharacterBody2D
 
 # Signals
 signal laser_fired(position : Vector2, rotation : float)
-signal player_hit(health)
+signal update_health(health)
 signal died
 
 @export var MAX_SPEED = 540
 @export var speed = 30
 @export var turn_speed = 5
-@export var explode_rotation = 3
 @export var rotation_direction = 0
 @export var ship_size = 45
-@export var player_health := 3
+@export var health := 3
 
 # Components
 @onready var navigateScreen = $NavigateScreenComponent
@@ -28,6 +27,9 @@ var laser_scene = preload("res://Scenes/Laser/laser.tscn")
 
 var playerIsDead = false
 var deathMomentumDirection = Vector2.ZERO
+
+func _ready():
+	emit_signal("update_health", health)
 
 func _process(delta):
 	
@@ -74,9 +76,9 @@ func fire_laser():
 
 func _on_player_area_area_entered(area):
 	if (area is Destructor) && (!playerIsDead):
-		player_health -= 1
-		emit_signal("player_hit", player_health)
-		if player_health < 0:
+		health -= 1
+		emit_signal("update_health", health)
+		if health < 0:
 			die(area)
 
 func die(killer):
