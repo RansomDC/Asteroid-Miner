@@ -4,7 +4,6 @@ extends Node
 ## Main entry point for the game.
 ## Responsible for setting up teh World layers and coordinating high-level systems
 
-
 # TODO: main menu
 const LEVEL_SCENE_UID  : String = "uid://cuvxplv7nn65r"
 const PLAYER_SCENE_UID : String = "uid://bovh403sqglwm"
@@ -15,6 +14,8 @@ var asteroid       : Destructor = null
 var hud            : Control = null
 
 var _current_level : BaseLevel = null
+
+var rng = RandomNumberGenerator.new()
 
 # Game World root nodes
 @onready var level_root  : Node2D = $World/LevelRoot
@@ -32,11 +33,15 @@ var _current_level : BaseLevel = null
 @onready var asteroid_sm = preload("res://Scenes/Asteroids/asteroid_sm.tscn")
 @onready var laser       = preload("res://Scenes/Laser/laser.tscn")
 
+# State
+@export var score : int = 0
+@export var lives: int = 3
+@export var money: int = 0
 
 func _ready() -> void:
-	_init_player()
-	
 	_init_hud()
+	
+	_init_player()
 	
 	load_level(LEVEL_SCENE_UID)
 	
@@ -48,12 +53,19 @@ func _init_player() -> void:
 		return
 	
 	player = player_scene.instantiate() as Player
-	player.laser_fired.connect(_on_laser_fired)
 	if player == null:
 		push_error("Loaded player scene does not extend player or DNE: " + PLAYER_SCENE_UID)
 		return
 	
-	entity_root.add_child(player)
+	# TODO: make a setup() method for easier setting of Player properties
+	player.health = 3
+	
+	# Connecting Player Signals
+	player.update_health.connect(_on_update_health)
+	player.laser_fired.connect(_on_laser_fired)
+	player.died.connect(_on_player_died)
+	
+	entity_root.call_deferred("add_child", player)
 
 func _init_hud() -> void:
 	var hud_scene : PackedScene = ResourceLoader.load(HUD_SCENE_UID) as PackedScene
@@ -67,6 +79,8 @@ func _init_hud() -> void:
 		return
 	
 	hud_root.add_child(hud)
+	hud.update_lives_label(lives)
+	hud.update_score_label(0)
 
 ## Called for loading a level scene.
 ## NOTE: The input level_scene must extend BaseLevel
@@ -123,27 +137,48 @@ func _on_laser_fired(position : Vector2, rotation : float):
 func _on_request_lg_ass_spawn(locations : Array):
 	for location in locations:
 		var new_asteroid = asteroid_lg.instantiate()
-		new_asteroid.parent_asteroid_destroyed.connect(_on_parent_ass_destroyed)
+		new_asteroid.asteroid_destroyed.connect(_on_ass_destroyed)
 		new_asteroid.position = location
 		entity_root.add_child(new_asteroid)
 
-func _on_parent_ass_destroyed(position : Vector2, asteroidType : Destructor):
+func _on_ass_destroyed(position : Vector2, asteroidType : Destructor):
 	if asteroidType is Asteroid_lg:
-		for ass in 2:
+		update_score(150)
+		for ass in rng.randf_range(2, 3):
 			var new_asteroid = asteroid_md.instantiate()
-			new_asteroid.parent_asteroid_destroyed.connect(_on_parent_ass_destroyed)
+			new_asteroid.asteroid_destroyed.connect(_on_ass_destroyed)
 			new_asteroid.position = position
 			entity_root.call_deferred("add_child", new_asteroid)
-			
-	if asteroidType is Asteroid_md:
-		for ass in 2:
+	elif asteroidType is Asteroid_md:
+		update_score(100)
+		for ass in rng.randf_range(2, 4):
 			var new_asteroid = asteroid_sm.instantiate()
+			new_asteroid.asteroid_destroyed.connect(_on_ass_destroyed)
 			new_asteroid.position = position
 			entity_root.call_deferred("add_child", new_asteroid)
+	elif asteroidType is Asteroid_sm:
+		update_score(50)
 
+func _on_update_score(points : int):
+	score += points
 
+func _on_update_health(health : int):
+	hud.update_shield_bar(health)
 
+func _on_player_died():
+	lives -= 1
+	hud.update_lives_label(lives)
+	
+	if lives < 1:
+		# Show game over screen
+		pass
+	else:
+		_init_player()
+		_place_player_at_level_spawn()
 
+func update_score(points : int):
+	score += points
+	hud.update_score_label(score)
 
 
 

@@ -1,12 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://dnof5csgfeu1f"]
+[gd_scene load_steps=3 format=3 uid="uid://dnof5csgfeu1f"]
 
 [ext_resource type="Script" path="res://Scenes/Level/ShieldBar.gd" id="1_e5bia"]
+[ext_resource type="Script" path="res://Scenes/Hud/hud.gd" id="1_j2y74"]
 
 [node name="Hud" type="Control"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
 offset_bottom = 40.0
+script = ExtResource("1_j2y74")
 
 [node name="Score" type="Label" parent="."]
 layout_mode = 0
