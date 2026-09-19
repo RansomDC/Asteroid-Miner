@@ -56,3 +56,5 @@ grow_horizontal = 2
 grow_vertical = 0
 theme = ExtResource("1_6u1vr")
 text = "Quit"
+
+[connection signal="button_up" from="Control/StartButton" to="." method="_on_start_button_button_up"]

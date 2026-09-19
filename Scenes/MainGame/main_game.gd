@@ -6,6 +6,8 @@ extends Node
 
 # TODO: main menu
 const LEVEL_SCENE_UID  : String = "uid://cuvxplv7nn65r"
+const MAIN_MENU_SCENE  : String = "uid://cugbd0gchmoe7"
+
 const PLAYER_SCENE_UID : String = "uid://bovh403sqglwm"
 const HUD_SCENE_UID    : String = "uid://dnof5csgfeu1f"
 
@@ -14,6 +16,7 @@ var asteroid       : Destructor = null
 var hud            : Control = null
 
 var _current_level : BaseLevel = null
+var _current_menu  : BaseMenu = null
 
 var rng = RandomNumberGenerator.new()
 
@@ -39,11 +42,12 @@ var rng = RandomNumberGenerator.new()
 @export var money: int = 0
 
 func _ready() -> void:
-	_init_hud()
-	
-	_init_player()
-	
-	load_level(LEVEL_SCENE_UID)
+	load_menu(MAIN_MENU_SCENE)
+#	_init_hud()
+#
+#	_init_player()
+#
+#	load_level(MAIN_MENU_SCENE)
 	
 
 func _init_player() -> void:
@@ -82,6 +86,30 @@ func _init_hud() -> void:
 	hud.update_lives_label(lives)
 	hud.update_score_label(0)
 
+func load_menu(menu_scene: String) -> void:
+	_deferred_load_menu.call_deferred(menu_scene)
+
+func _deferred_load_menu(menu_scene_uid : String) -> void:
+	if _current_menu != null:
+		_current_menu.queue_free()
+		_current_menu = null
+	
+	await get_tree().process_frame
+	
+	var new_menu_packed : PackedScene =\
+		ResourceLoader.load(menu_scene_uid, "PackedScene") as PackedScene
+	
+	if new_menu_packed == null:
+		push_error("Could not load level as a packed scene" + menu_scene_uid)
+		return
+	
+	_current_menu = new_menu_packed.instantiate() as BaseMenu
+	
+	if _current_menu is MainMenu:
+		_current_menu.start_game.connect(_on_start_game)
+	
+	level_root.add_child(_current_menu)
+
 ## Called for loading a level scene.
 ## NOTE: The input level_scene must extend BaseLevel
 func load_level(level_scene : String) -> void:
@@ -93,6 +121,10 @@ func _deferred_load_level(level_scene_uid : String) -> void:
 		_current_level.queue_free()
 		_current_level = null
 	
+	if _current_menu != null:
+		_current_menu.queue_free()
+		_current_menu = null
+	
 	#Allow the old level to finish freeing before adding the new one
 	await get_tree().process_frame
 	
@@ -100,7 +132,7 @@ func _deferred_load_level(level_scene_uid : String) -> void:
 		ResourceLoader.load(level_scene_uid, "PackedScene") as PackedScene
 	
 	if new_level_packed == null:
-		push_error("Could not laod level as a packed scene: " + level_scene_uid)
+		push_error("Could not load level as a packed scene: " + level_scene_uid)
 		return
 		#TODO (main menu) : Should have fall back scene
 	
@@ -175,6 +207,13 @@ func _on_player_died():
 	else:
 		_init_player()
 		_place_player_at_level_spawn()
+
+func _on_start_game():
+	_init_hud()
+	
+	_init_player()
+	
+	load_level(LEVEL_SCENE_UID)
 
 func update_score(points : int):
 	score += points
