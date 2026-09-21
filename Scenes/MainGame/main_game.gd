@@ -94,6 +94,10 @@ func _deferred_load_menu(menu_scene_uid : String) -> void:
 		_current_menu.queue_free()
 		_current_menu = null
 	
+	if _current_level != null:
+		_current_level.queue_free()
+		_current_level = null
+	
 	await get_tree().process_frame
 	
 	var new_menu_packed : PackedScene =\
