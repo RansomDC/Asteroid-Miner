@@ -71,7 +71,6 @@ func fire_laser():
 #	l.global_position = cannon.global_position
 #	l.rotation = rotation
 	emit_signal("laser_fired", cannon.global_position, rotation)
-	print(cannon.global_position, rotation)
 #endregion
 
 func _on_player_area_area_entered(area):

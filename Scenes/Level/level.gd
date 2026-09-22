@@ -23,7 +23,6 @@ func _get_random_positions(count) -> Array:
 	var positions = []
 	for i in count:
 		positions.append(get_random_position())
-	print(positions)
 	return positions
 	
 func get_random_position() -> Vector2:
