@@ -5,11 +5,13 @@ extends Node
 ## Responsible for setting up teh World layers and coordinating high-level systems
 
 # TODO: main menu
-const LEVEL_SCENE_UID  : String = "uid://cuvxplv7nn65r"
-const MAIN_MENU_SCENE  : String = "uid://cugbd0gchmoe7"
+const LEVEL_SCENE_UID     : String = "uid://cuvxplv7nn65r"
+const MAIN_MENU_SCENE     : String = "uid://cugbd0gchmoe7"
 
-const PLAYER_SCENE_UID : String = "uid://bovh403sqglwm"
-const HUD_SCENE_UID    : String = "uid://dnof5csgfeu1f"
+const PLAYER_SCENE_UID    : String = "uid://bovh403sqglwm"
+const HUD_SCENE_UID       : String = "uid://dnof5csgfeu1f"
+
+const STARTING_DIFFICULTY : int = 2
 
 var player         : Player = null
 var asteroid       : Destructor = null
@@ -30,6 +32,9 @@ var rng = RandomNumberGenerator.new()
 @onready var pause_root      : Control = $PauseLayer/PauseRoot
 @onready var transition_root : Control = $TransitionLayer/TransitionRoot
 
+# System Nodes
+@onready var level_end_timer : Timer = $Systems/LevelEndTimer
+
 # Preload Scenes
 @onready var asteroid_lg = preload("res://Scenes/Asteroids/asteroid_lg.tscn")
 @onready var asteroid_md = preload("res://Scenes/Asteroids/asteroid_md.tscn")
@@ -37,18 +42,13 @@ var rng = RandomNumberGenerator.new()
 @onready var laser       = preload("res://Scenes/Laser/laser.tscn")
 
 # State
-@export var score : int = 0
-@export var lives: int = 3
-@export var money: int = 0
+@export var score             : int = 0
+@export var lives             : int = 3
+@export var money             : int = 0
+@export var current_level     : int = 1
 
 func _ready() -> void:
 	load_menu(MAIN_MENU_SCENE)
-#	_init_hud()
-#
-#	_init_player()
-#
-#	load_level(MAIN_MENU_SCENE)
-	
 
 func _init_player() -> void:
 	var player_scene : PackedScene = ResourceLoader.load(PLAYER_SCENE_UID) as PackedScene
@@ -141,6 +141,7 @@ func _deferred_load_level(level_scene_uid : String) -> void:
 		#TODO (main menu) : Should have fall back scene
 	
 	_current_level = new_level_packed.instantiate() as BaseLevel
+	_current_level.num_asteroids = STARTING_DIFFICULTY + current_level
 
 	_current_level.request_lg_ass_spawn.connect(_on_request_lg_ass_spawn)
 	
@@ -194,6 +195,8 @@ func _on_ass_destroyed(position : Vector2, asteroidType : Destructor):
 			entity_root.call_deferred("add_child", new_asteroid)
 	elif asteroidType is Asteroid_sm:
 		update_score(50)
+		level_end_timer.start(3)
+	
 
 func _on_update_score(points : int):
 	score += points
@@ -223,9 +226,18 @@ func update_score(points : int):
 	score += points
 	hud.update_score_label(score)
 
+# Check if there are any asteroids left in EntityRoot, if there aren't end the level.
+func _on_level_end_timer_timeout():
+	var entities = entity_root.get_children()
+	print(entities)
+	for entity in entities:
+		if entity is Asteroid_lg or entity is Asteroid_md or entity is Asteroid_sm:
+			return
+	_complete_level()
 
-
-
-
-
-
+func _complete_level():
+	print("Level is done!")
+	current_level += 1
+	load_level(LEVEL_SCENE_UID)
+	
+	

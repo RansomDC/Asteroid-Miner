@@ -8,6 +8,9 @@ script = ExtResource("1_3bw54")
 
 [node name="Systems" type="Node" parent="."]
 
+[node name="LevelEndTimer" type="Timer" parent="Systems"]
+one_shot = true
+
 [node name="World" type="Node2D" parent="."]
 process_mode = 1
 
@@ -52,3 +55,5 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[connection signal="timeout" from="Systems/LevelEndTimer" to="." method="_on_level_end_timer_timeout"]
