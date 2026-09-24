@@ -50,7 +50,7 @@ var rng = RandomNumberGenerator.new()
 func _ready() -> void:
 	load_menu(MAIN_MENU_SCENE)
 
-func _process(delta):
+func _process(_delta):
 	if Input.is_action_just_pressed("debug_destroy_ass"):
 		destroy_asteroids()
 

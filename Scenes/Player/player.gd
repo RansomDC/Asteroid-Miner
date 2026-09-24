@@ -31,7 +31,7 @@ var deathMomentumDirection = Vector2.ZERO
 func _ready():
 	emit_signal("update_health", health)
 
-func _process(delta):
+func _process(_delta):
 	
 	if playerIsDead: return
 	
