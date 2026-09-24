@@ -94,3 +94,7 @@ func respawn():
 	
 	velocity = Vector2.ZERO
 	
+
+func reset_position():
+	velocity = Vector2(0,0)
+	rotation = 0
