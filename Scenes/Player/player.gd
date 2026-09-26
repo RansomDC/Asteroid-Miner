@@ -31,7 +31,7 @@ var deathMomentumDirection = Vector2.ZERO
 func _ready():
 	emit_signal("update_health", health)
 
-func _process(delta):
+func _process(_delta):
 	
 	if playerIsDead: return
 	
@@ -94,3 +94,7 @@ func respawn():
 	
 	velocity = Vector2.ZERO
 	
+
+func reset_position():
+	velocity = Vector2(0,0)
+	rotation = 0

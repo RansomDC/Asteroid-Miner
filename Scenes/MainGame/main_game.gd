@@ -50,6 +50,10 @@ var rng = RandomNumberGenerator.new()
 func _ready() -> void:
 	load_menu(MAIN_MENU_SCENE)
 
+func _process(_delta):
+	if Input.is_action_just_pressed("debug_destroy_ass"):
+		destroy_asteroids()
+
 func _init_player() -> void:
 	var player_scene : PackedScene = ResourceLoader.load(PLAYER_SCENE_UID) as PackedScene
 	if player_scene == null:
@@ -240,4 +244,47 @@ func _complete_level():
 	current_level += 1
 	load_level(LEVEL_SCENE_UID)
 	
+	if player != null:
+		player.reset_position()
 	
+
+
+
+
+### DEBUG ACTIONS ###
+
+func destroy_asteroids():
+		var entities = entity_root.get_children()
+		for entity in entities:
+			if (entity is Asteroid_lg || entity is Asteroid_md || entity is Asteroid_sm):
+				entity.destroy()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
