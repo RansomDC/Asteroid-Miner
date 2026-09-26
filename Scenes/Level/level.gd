@@ -15,20 +15,24 @@ signal request_lg_ass_spawn(positions: Array)
 @export var num_asteroids = 3
 
 func _ready():
-	request_lg_ass_spawn.emit(_get_random_positions(num_asteroids))
+	request_lg_ass_spawn.emit(_get_safe_random_positions(num_asteroids))
 
 # Helpers
 ###
-func _get_random_positions(count) -> Array:
+func _get_safe_random_positions(count) -> Array:
 	var positions = []
 	for i in count:
-		positions.append(get_random_position())
+		positions.append(get_safe_random_position())
 	return positions
 	
-func get_random_position() -> Vector2:
+func get_safe_random_position() -> Vector2:
 	randomize()
 	#return a random screen position. TODO: Update this to not spawn asteroids near the player's spawn location
 	var v = Vector2(randf_range(0, viewport.get_visible_rect().size.x), randf_range(0, viewport.get_visible_rect().size.y))
+	# We loop this method until we get a range that is not in the player spawn area
+	# TODO: There has to be a better way to do this. Do it better
+	while (v.x > 896 and v.x < 1024) or (v.y > 472 and v.y < 608):
+		v = Vector2(randf_range(0, viewport.get_visible_rect().size.x), randf_range(0, viewport.get_visible_rect().size.y))
 	return v
 
 

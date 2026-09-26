@@ -87,6 +87,7 @@ func _init_hud() -> void:
 		return
 	
 	hud_root.add_child(hud)
+	hud.update_level_label(current_level)
 	hud.update_lives_label(lives)
 	hud.update_score_label(0)
 
@@ -242,6 +243,7 @@ func _on_level_end_timer_timeout():
 func _complete_level():
 	print("Level is done!")
 	current_level += 1
+	hud.update_level_label(current_level)
 	load_level(LEVEL_SCENE_UID)
 	
 	if player != null:
