@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Scenes/DestructablePart/DestructablePart.gd" id="1_iq1v3"]
 
 [node name="side" type="Line2D"]
-points = PackedVector2Array(0, -24, 16, 16)
+points = PackedVector2Array(0, -24, 0, 24)
 width = 2.0
 joint_mode = 2
 begin_cap_mode = 2

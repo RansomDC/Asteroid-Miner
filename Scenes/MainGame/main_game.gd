@@ -39,10 +39,11 @@ var rng = RandomNumberGenerator.new()
 @onready var level_end_timer : Timer = $Systems/LevelEndTimer
 
 # Preload Scenes
-@onready var asteroid_lg = preload("res://Scenes/Asteroids/asteroid_lg.tscn")
-@onready var asteroid_md = preload("res://Scenes/Asteroids/asteroid_md.tscn")
-@onready var asteroid_sm = preload("res://Scenes/Asteroids/asteroid_sm.tscn")
-@onready var laser       = preload("res://Scenes/Laser/laser.tscn")
+@onready var asteroid_lg    = preload("res://Scenes/Asteroids/asteroid_lg.tscn")
+@onready var asteroid_md    = preload("res://Scenes/Asteroids/asteroid_md.tscn")
+@onready var asteroid_sm    = preload("res://Scenes/Asteroids/asteroid_sm.tscn")
+@onready var laser          = preload("res://Scenes/Laser/laser.tscn")
+@onready var money_crystal  = preload("res://Scenes/Crystals/MoneyCrystal/MoneyCrystal.tscn")
 
 # State
 @export var score             : int = 0
@@ -205,6 +206,7 @@ func _on_request_lg_ass_spawn(locations : Array):
 	for location in locations:
 		var new_asteroid = asteroid_lg.instantiate()
 		new_asteroid.asteroid_destroyed.connect(_on_ass_destroyed)
+		new_asteroid.spawn_crystal.connect(_on_spawn_crystal)
 		new_asteroid.position = location
 		entity_root.add_child(new_asteroid)
 
@@ -215,6 +217,7 @@ func _on_ass_destroyed(position : Vector2, asteroidType : Destructor):
 		for ass in rng.randf_range(2, 3):
 			var new_asteroid = asteroid_md.instantiate()
 			new_asteroid.asteroid_destroyed.connect(_on_ass_destroyed)
+			new_asteroid.spawn_crystal.connect(_on_spawn_crystal)
 			new_asteroid.position = position
 			entity_root.call_deferred("add_child", new_asteroid)
 	elif asteroidType is Asteroid_md:
@@ -229,6 +232,10 @@ func _on_ass_destroyed(position : Vector2, asteroidType : Destructor):
 		level_end_timer.start(3)
 	
 
+func _on_spawn_crystal(position: Vector2):
+	var new_crystal = money_crystal.instantiate()
+	new_crystal.position = position
+	entity_root.add_child(new_crystal)
 
 func _on_update_score(points : int):
 	score += points
