@@ -11,11 +11,14 @@ const MAIN_MENU_SCENE     : String = "uid://cugbd0gchmoe7"
 const PLAYER_SCENE_UID    : String = "uid://bovh403sqglwm"
 const HUD_SCENE_UID       : String = "uid://dnof5csgfeu1f"
 
+const FADE_SCENE_UID      : String = "uid://dm0tmox46yh5l"
+
 const STARTING_DIFFICULTY : int = 2
 
 var player         : Player = null
 var asteroid       : Destructor = null
 var hud            : Control = null
+var fadeTransition : CanvasLayer = null
 
 var _current_level : BaseLevel = null
 var _current_menu  : BaseMenu = null
@@ -49,50 +52,17 @@ var rng = RandomNumberGenerator.new()
 
 func _ready() -> void:
 	load_menu(MAIN_MENU_SCENE)
+	load_transitions()
+
 
 func _process(_delta):
 	if Input.is_action_just_pressed("debug_destroy_ass"):
 		destroy_asteroids()
 
-func _init_player() -> void:
-	var player_scene : PackedScene = ResourceLoader.load(PLAYER_SCENE_UID) as PackedScene
-	if player_scene == null:
-		push_error("Could not load playerscene: " + PLAYER_SCENE_UID)
-		return
-	
-	player = player_scene.instantiate() as Player
-	if player == null:
-		push_error("Loaded player scene does not extend player or DNE: " + PLAYER_SCENE_UID)
-		return
-	
-	# TODO: make a setup() method for easier setting of Player properties
-	player.health = 3
-	
-	# Connecting Player Signals
-	player.update_health.connect(_on_update_health)
-	player.laser_fired.connect(_on_laser_fired)
-	player.died.connect(_on_player_died)
-	
-	entity_root.call_deferred("add_child", player)
-
-func _init_hud() -> void:
-	var hud_scene : PackedScene = ResourceLoader.load(HUD_SCENE_UID) as PackedScene
-	if hud_scene == null:
-		push_error("Could not load hudscene: " + HUD_SCENE_UID)
-		return
-	
-	hud = hud_scene.instantiate() as Control
-	if hud == null:
-		push_error("Loaded hud scene does not extend Control or DNE: " + HUD_SCENE_UID)
-		return
-	
-	hud_root.add_child(hud)
-	hud.update_level_label(current_level)
-	hud.update_lives_label(lives)
-	hud.update_score_label(0)
 
 func load_menu(menu_scene: String) -> void:
 	_deferred_load_menu.call_deferred(menu_scene)
+
 
 func _deferred_load_menu(menu_scene_uid : String) -> void:
 	if _current_menu != null:
@@ -119,11 +89,64 @@ func _deferred_load_menu(menu_scene_uid : String) -> void:
 	
 	level_root.add_child(_current_menu)
 
+
+func load_transitions() -> void:
+	var new_fade_packed : PackedScene =\
+	ResourceLoader.load(FADE_SCENE_UID, "PackedScene") as PackedScene
+
+	if new_fade_packed == null:
+		push_error("Could not load fade transition as a packed scene" + FADE_SCENE_UID)
+		return
+
+	fadeTransition = new_fade_packed.instantiate() as CanvasLayer
+	transition_root.add_child(fadeTransition)
+
+
+func _init_player() -> void:
+	var player_scene : PackedScene = ResourceLoader.load(PLAYER_SCENE_UID) as PackedScene
+	if player_scene == null:
+		push_error("Could not load playerscene: " + PLAYER_SCENE_UID)
+		return
+	
+	player = player_scene.instantiate() as Player
+	if player == null:
+		push_error("Loaded player scene does not extend player or DNE: " + PLAYER_SCENE_UID)
+		return
+	
+	# TODO: make a setup() method for easier setting of Player properties
+	player.health = 3
+	
+	# Connecting Player Signals
+	player.update_health.connect(_on_update_health)
+	player.laser_fired.connect(_on_laser_fired)
+	player.died.connect(_on_player_died)
+	
+	entity_root.call_deferred("add_child", player)
+
+
+func _init_hud() -> void:
+	var hud_scene : PackedScene = ResourceLoader.load(HUD_SCENE_UID) as PackedScene
+	if hud_scene == null:
+		push_error("Could not load hudscene: " + HUD_SCENE_UID)
+		return
+	
+	hud = hud_scene.instantiate() as Control
+	if hud == null:
+		push_error("Loaded hud scene does not extend Control or DNE: " + HUD_SCENE_UID)
+		return
+	
+	hud_root.add_child(hud)
+	hud.update_level_label(current_level)
+	hud.update_lives_label(lives)
+	hud.update_score_label(0)
+
+
 ## Called for loading a level scene.
 ## NOTE: The input level_scene must extend BaseLevel
 func load_level(level_scene : String) -> void:
 	# Make sure this is called during idle time
 	_deferred_load_level.call_deferred(level_scene)
+
 
 func _deferred_load_level(level_scene_uid : String) -> void:
 	if _current_level != null:
@@ -170,11 +193,13 @@ func _place_player_at_level_spawn() -> void:
 	
 	player.global_position = _current_level.get_default_player_spawn()
 
+
 func _on_laser_fired(position : Vector2, rotation : float):
 	var l = laser.instantiate()
 	l.global_position = position
 	l.rotation = rotation
 	entity_root.add_child(l)
+
 
 func _on_request_lg_ass_spawn(locations : Array):
 	for location in locations:
@@ -182,6 +207,7 @@ func _on_request_lg_ass_spawn(locations : Array):
 		new_asteroid.asteroid_destroyed.connect(_on_ass_destroyed)
 		new_asteroid.position = location
 		entity_root.add_child(new_asteroid)
+
 
 func _on_ass_destroyed(position : Vector2, asteroidType : Destructor):
 	if asteroidType is Asteroid_lg:
@@ -203,11 +229,14 @@ func _on_ass_destroyed(position : Vector2, asteroidType : Destructor):
 		level_end_timer.start(3)
 	
 
+
 func _on_update_score(points : int):
 	score += points
 
+
 func _on_update_health(health : int):
 	hud.update_shield_bar(health)
+
 
 func _on_player_died():
 	lives -= 1
@@ -220,6 +249,7 @@ func _on_player_died():
 		_init_player()
 		_place_player_at_level_spawn()
 
+
 func _on_start_game():
 	_init_hud()
 	
@@ -227,9 +257,11 @@ func _on_start_game():
 	
 	load_level(LEVEL_SCENE_UID)
 
+
 func update_score(points : int):
 	score += points
 	hud.update_score_label(score)
+
 
 # Check if there are any asteroids left in EntityRoot, if there aren't end the level.
 func _on_level_end_timer_timeout():
@@ -240,7 +272,9 @@ func _on_level_end_timer_timeout():
 			return
 	_complete_level()
 
+
 func _complete_level():
+	await fadeTransition.fade(1.0, 1.0).finished
 	print("Level is done!")
 	current_level += 1
 	hud.update_level_label(current_level)
@@ -249,8 +283,7 @@ func _complete_level():
 	if player != null:
 		player.reset_position()
 	
-
-
+	fadeTransition.fade(0, 0.5)
 
 
 ### DEBUG ACTIONS ###
