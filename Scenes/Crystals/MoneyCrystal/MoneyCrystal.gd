@@ -18,7 +18,7 @@ func _ready():
 	rotation = randf_range(0, 3*PI)
 
 func _physics_process(delta):
-	global_position += movement_vector.rotated(a.rotation) * speed * delta
+	global_position += movement_vector.rotated(rotation) * speed * delta
 	
 	#Move to other side of screen when they go off one side
 	global_position = navigateScreen.traverse_edge(
