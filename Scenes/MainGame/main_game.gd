@@ -282,6 +282,12 @@ func _on_level_end_timer_timeout():
 
 func _complete_level():
 	await fadeTransition.fade(1.0, 1.0).finished
+	var entities = entity_root.get_children()
+	for entity in entities:
+		if entity is Player:
+			continue
+		entity.queue_free()
+	
 	print("Level is done!")
 	current_level += 1
 	hud.update_level_label(current_level)

@@ -1,4 +1,4 @@
-class_name MoneyCrystal extends Area2D
+class_name MoneyCrystal extends Crystal
 
 signal crystal_destroyed()
 
