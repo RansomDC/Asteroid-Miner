@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3 uid="uid://nvaebmwe47x6"]
+
+[ext_resource type="PackedScene" uid="uid://dtivktv8afc23" path="res://Scenes/DestructablePart/DestructablePart.tscn" id="1_8thmb"]
+[ext_resource type="Script" path="res://Scenes/Crystals/MoneyCrystal/MoneyCrystal.gd" id="1_f533a"]
+[ext_resource type="PackedScene" uid="uid://jo8srm7l1hhf" path="res://Scenes/destruction_component.tscn" id="2_aaqvm"]
+[ext_resource type="Script" path="res://Scripts/Components/NavigateScreenComponent.gd" id="3_m0pfg"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_y0beu"]
+radius = 11.1803
+
+[node name="MoneyCrystal" type="Area2D"]
+script = ExtResource("1_f533a")
+
+[node name="DestructionComponent" parent="." instance=ExtResource("2_aaqvm")]
+
+[node name="NavigateScreenComponent" type="Node" parent="."]
+script = ExtResource("3_m0pfg")
+
+[node name="CollisionShape" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_y0beu")
+
+[node name="side" parent="." instance=ExtResource("1_8thmb")]
+points = PackedVector2Array(0, -11, 0, 11)
+
+[node name="side2" parent="." instance=ExtResource("1_8thmb")]
+rotation = -1.0472
+points = PackedVector2Array(0, -11.3137, 0, 11.3137)
+
+[node name="side3" parent="." instance=ExtResource("1_8thmb")]
+rotation = 1.0472
+points = PackedVector2Array(0, -11.3137, 0, 11.3137)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
