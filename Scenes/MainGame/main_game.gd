@@ -234,8 +234,13 @@ func _on_ass_destroyed(position : Vector2, asteroidType : Destructor):
 
 func _on_spawn_crystal(position: Vector2):
 	var new_crystal = money_crystal.instantiate()
+	new_crystal.collect_money.connect(_on_money_added)
 	new_crystal.position = position
 	entity_root.call_deferred("add_child", new_crystal)
+
+func _on_money_added():
+	money += 1
+	hud.update_money_label(money)
 
 func _on_update_score(points : int):
 	score += points

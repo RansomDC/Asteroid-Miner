@@ -1,6 +1,7 @@
 class_name MoneyCrystal extends Crystal
 
 signal crystal_destroyed()
+signal collect_money()
 
 @onready var collision_shape        = $CollisionShape
 @onready var destruction_component  = $DestructionComponent
@@ -33,6 +34,7 @@ func _on_area_entered(area):
 		destroy()
 	
 	if area.get_parent() is Player:
+		collect_money.emit()
 		print("You got a crystal!")
 		queue_free()
 		#TODO: send a signal

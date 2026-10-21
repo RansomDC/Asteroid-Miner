@@ -12,6 +12,10 @@ class_name Hud extends Control
 	set(value):
 		lives.text = "Lives: " + str(value)
 
+@onready var money = $Money:
+	set(value):
+		money.text = "Money: " + str(value)
+
 @onready var shieldBar = $ShieldBar
 
 
@@ -24,5 +28,9 @@ func update_level_label(currentLevel : int):
 func update_lives_label(remainingLives : int):
 	lives = remainingLives
 
+func update_money_label(currentMoney : int):
+	money = currentMoney
+
 func update_shield_bar(health : int):
 	shieldBar.value = health
+
