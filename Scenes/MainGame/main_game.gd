@@ -122,6 +122,8 @@ func _init_player() -> void:
 	player.update_health.connect(_on_update_health)
 	player.laser_fired.connect(_on_laser_fired)
 	player.died.connect(_on_player_died)
+	player.collect_health.connect(_on_health_added)
+	player.collect_money.connect(_on_money_added)
 	
 	entity_root.call_deferred("add_child", player)
 
@@ -235,10 +237,6 @@ func _on_ass_destroyed(position : Vector2, asteroidType : Destructor):
 
 func _on_spawn_crystal(position: Vector2, crystalType : PackedScene):
 	var new_crystal = crystalType.instantiate()
-	if new_crystal is MoneyCrystal:
-		new_crystal.collect_money.connect(_on_money_added)
-	else:
-		new_crystal.collect_health.connect(_on_health_added)
 	new_crystal.position = position
 	entity_root.call_deferred("add_child", new_crystal)
 

@@ -3,6 +3,8 @@ class_name Player extends CharacterBody2D
 # Signals
 signal laser_fired(position : Vector2, rotation : float)
 signal update_health(health)
+signal collect_health()
+signal collect_money()
 signal died
 
 @export var MAX_SPEED = 540
@@ -74,11 +76,24 @@ func fire_laser():
 #endregion
 
 func _on_player_area_area_entered(area):
+	# Player loses health when a destructive area enters it's area
 	if (area is Destructor) && (!playerIsDead):
 		health -= 1
 		emit_signal("update_health", health)
 		if health < 0:
 			die(area)
+		
+	# Player gains health (max of three) when a health crystal enters it's area
+	elif area is HealthCrystal:
+		if health < 3:
+			health += 1
+		update_health.emit(health)
+		print("You got a health crystal!")
+		
+	# Player gains money when a money crystal enters it's area
+	elif area is MoneyCrystal:
+		collect_money.emit()
+		print("You got a money crystal!")
 
 func die(killer):
 	if !playerIsDead:
