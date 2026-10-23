@@ -44,6 +44,7 @@ var rng = RandomNumberGenerator.new()
 @onready var asteroid_sm    = preload("res://Scenes/Asteroids/asteroid_sm.tscn")
 @onready var laser          = preload("res://Scenes/Laser/laser.tscn")
 @onready var money_crystal  = preload("res://Scenes/Crystals/MoneyCrystal/MoneyCrystal.tscn")
+@onready var health_crystal = preload("res://Scenes/Crystals/HealthCrystal/HealthCrystal.tscn")
 
 # State
 @export var score             : int = 0
@@ -121,6 +122,8 @@ func _init_player() -> void:
 	player.update_health.connect(_on_update_health)
 	player.laser_fired.connect(_on_laser_fired)
 	player.died.connect(_on_player_died)
+	player.collect_health.connect(_on_health_added)
+	player.collect_money.connect(_on_money_added)
 	
 	entity_root.call_deferred("add_child", player)
 
@@ -232,15 +235,17 @@ func _on_ass_destroyed(position : Vector2, asteroidType : Destructor):
 		level_end_timer.start(3)
 	
 
-func _on_spawn_crystal(position: Vector2):
-	var new_crystal = money_crystal.instantiate()
-	new_crystal.collect_money.connect(_on_money_added)
+func _on_spawn_crystal(position: Vector2, crystalType : PackedScene):
+	var new_crystal = crystalType.instantiate()
 	new_crystal.position = position
 	entity_root.call_deferred("add_child", new_crystal)
 
 func _on_money_added():
 	money += 1
 	hud.update_money_label(money)
+
+func _on_health_added():
+	pass
 
 func _on_update_score(points : int):
 	score += points

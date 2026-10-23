@@ -2,8 +2,11 @@ class_name Asteroid_lg extends Destructor
 
 # Signals
 signal asteroid_destroyed(position : Vector2, assType : Destructor)
-signal spawn_crystal(position : Vector2)
+signal spawn_crystal(position : Vector2, crystalType : PackedScene)
 signal update_score(points : int)
+
+const MONEY_CRYSTAL_SCENE = preload("res://Scenes/Crystals/MoneyCrystal/MoneyCrystal.tscn")
+const HEALTH_CRYSTAL_SCENE = preload("res://Scenes/Crystals/HealthCrystal/HealthCrystal.tscn")
 
 # Components
 @onready var destructionComponent = $DestructionComponent
@@ -27,7 +30,12 @@ func destroy():
 	destructionComponent.destroy()
 	asteroid_destroyed.emit(self.global_position, self)
 	
-	# Happens 35% of the time
-	if rng.randf() < 0.35:
-		spawn_crystal.emit(self.global_position)
-		print("Spawn crystal signal sent!")
+	# spawn money crystal 20% of the time
+	if rng.randf() < 0.20:
+		spawn_crystal.emit(self.global_position, MONEY_CRYSTAL_SCENE)
+		print("Spawn health crystal signal sent!")
+	
+	#spawn health crystal 20% of the time
+	if rng.randf() < 0.20:
+		spawn_crystal.emit(self.global_position, HEALTH_CRYSTAL_SCENE)
+		print("Spawn health crystal signal sent!")

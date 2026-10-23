@@ -1,0 +1,47 @@
+[gd_scene load_steps=7 format=3 uid="uid://dpec40eyiyh0v"]
+
+[ext_resource type="Script" path="res://Scenes/Crystals/HealthCrystal/HealthCrystal.gd" id="1_jx3fs"]
+[ext_resource type="PackedScene" uid="uid://jo8srm7l1hhf" path="res://Scenes/destruction_component.tscn" id="2_dtmyo"]
+[ext_resource type="Script" path="res://Scripts/Components/NavigateScreenComponent.gd" id="3_yl0u6"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_y0beu"]
+radius = 11.1803
+
+[sub_resource type="Gradient" id="Gradient_166d3"]
+offsets = PackedFloat32Array(0.507874, 0.547244, 0.681102, 0.72912, 0.992126)
+colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_1fkk8"]
+gradient = SubResource("Gradient_166d3")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0, 1)
+repeat = 1
+
+[node name="HealthCrystal" type="Area2D"]
+script = ExtResource("1_jx3fs")
+
+[node name="DestructionComponent" parent="." instance=ExtResource("2_dtmyo")]
+
+[node name="NavigateScreenComponent" type="Node" parent="."]
+script = ExtResource("3_yl0u6")
+
+[node name="CollisionShape" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_y0beu")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-0.483393, -6.24998)
+scale = Vector2(0.179688, 0.179688)
+texture = SubResource("GradientTexture2D_1fkk8")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+position = Vector2(5.51661, 3.75002)
+scale = Vector2(0.181818, 0.184659)
+texture = SubResource("GradientTexture2D_1fkk8")
+
+[node name="Sprite2D3" type="Sprite2D" parent="."]
+position = Vector2(-5.48339, 3.75002)
+scale = Vector2(0.172394, 0.172394)
+texture = SubResource("GradientTexture2D_1fkk8")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered" flags=18]
