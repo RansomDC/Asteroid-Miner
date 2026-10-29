@@ -1,0 +1,56 @@
+[gd_scene load_steps=4 format=3 uid="uid://b3m4a6w6q6764"]
+
+[ext_resource type="Script" path="res://Scenes/Level/CountScoreLevel.gd" id="1_1iboj"]
+[ext_resource type="Script" path="res://Scenes/Level/PlayerSpawnLocation.gd" id="2_lo8cn"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jnwjf"]
+radius = 64.0
+
+[node name="CountScoreLevel" type="Node"]
+script = ExtResource("1_1iboj")
+
+[node name="PlayerSpawnPosition" type="Node2D" parent="."]
+position = Vector2(960, 540)
+
+[node name="PlayerSpawnLocation" type="Area2D" parent="PlayerSpawnPosition"]
+script = ExtResource("2_lo8cn")
+
+[node name="PlayerSpawnArea" type="CollisionShape2D" parent="PlayerSpawnPosition/PlayerSpawnLocation"]
+shape = SubResource("CircleShape2D_jnwjf")
+
+[node name="Scores" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="OverallScore" type="Label" parent="Scores"]
+layout_mode = 0
+offset_left = 640.0
+offset_top = 384.0
+offset_right = 788.0
+offset_bottom = 422.0
+theme_override_font_sizes/font_size = 25
+text = "Total Score: "
+
+[node name="OverallScoreValue" type="Label" parent="Scores"]
+offset_left = 792.0
+offset_top = 384.0
+offset_right = 940.0
+offset_bottom = 422.0
+theme_override_font_sizes/font_size = 25
+
+[node name="LevelScore" type="Label" parent="Scores"]
+offset_left = 1088.0
+offset_top = 384.0
+offset_right = 1237.0
+offset_bottom = 422.0
+theme_override_font_sizes/font_size = 25
+text = "Level Score: "
+
+[node name="LevelScoreValue" type="Label" parent="Scores"]
+offset_left = 1237.0
+offset_top = 384.0
+offset_right = 1385.0
+offset_bottom = 422.0
+theme_override_font_sizes/font_size = 25

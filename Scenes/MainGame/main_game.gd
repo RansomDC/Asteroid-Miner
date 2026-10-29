@@ -6,6 +6,7 @@ extends Node
 
 # TODO: main menu
 const LEVEL_SCENE_UID     : String = "uid://cuvxplv7nn65r"
+const COUNT_SCORE_UID     : String = "uid://b3m4a6w6q6764"
 const MAIN_MENU_SCENE     : String = "uid://cugbd0gchmoe7"
 
 const PLAYER_SCENE_UID    : String = "uid://bovh403sqglwm"
@@ -47,10 +48,11 @@ var rng = RandomNumberGenerator.new()
 @onready var health_crystal = preload("res://Scenes/Crystals/HealthCrystal/HealthCrystal.tscn")
 
 # State
-@export var score             : int = 0
-@export var lives             : int = 3
-@export var money             : int = 0
-@export var current_level     : int = 1
+var score             : int = 0
+var overallScore      : int = 0
+var lives             : int = 3
+var money             : int = 0
+var current_level     : int = 1
 
 func _ready() -> void:
 	load_menu(MAIN_MENU_SCENE)
@@ -173,9 +175,14 @@ func _deferred_load_level(level_scene_uid : String) -> void:
 		#TODO (main menu) : Should have fall back scene
 	
 	_current_level = new_level_packed.instantiate() as BaseLevel
-	_current_level.num_asteroids = STARTING_DIFFICULTY + current_level
-
-	_current_level.request_lg_ass_spawn.connect(_on_request_lg_ass_spawn)
+	
+	if _current_level is Level:
+		_current_level.num_asteroids = STARTING_DIFFICULTY + current_level
+		_current_level.request_lg_ass_spawn.connect(_on_request_lg_ass_spawn)
+	
+	if _current_level is CountScoreLevel:
+		_current_level.currentScore = overallScore
+		_current_level.levelScore = score
 	
 	level_root.add_child(_current_level)
 	
@@ -301,7 +308,7 @@ func _complete_level():
 	print("Level is done!")
 	current_level += 1
 	hud.update_level_label(current_level)
-	load_level(LEVEL_SCENE_UID)
+	load_level(COUNT_SCORE_UID)
 	
 	if player != null:
 		player.reset_position()

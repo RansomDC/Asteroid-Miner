@@ -3,11 +3,6 @@ class_name Level extends BaseLevel
 # Signals
 signal request_lg_ass_spawn(positions: Array)
 
-# Preloads
-@onready var asteroid_lg = preload("res://Scenes/Asteroids/asteroid_lg.tscn")
-@onready var asteroid_md = preload("res://Scenes/Asteroids/asteroid_md.tscn")
-@onready var asteroid_sm = preload("res://Scenes/Asteroids/asteroid_sm.tscn")
-
 # Data
 @onready var viewport = get_viewport()
 
