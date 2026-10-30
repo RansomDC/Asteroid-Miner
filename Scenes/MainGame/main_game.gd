@@ -6,6 +6,7 @@ extends Node
 
 # TODO: main menu
 const LEVEL_SCENE_UID     : String = "uid://cuvxplv7nn65r"
+const COUNT_SCORE_UID     : String = "uid://b3m4a6w6q6764"
 const MAIN_MENU_SCENE     : String = "uid://cugbd0gchmoe7"
 
 const PLAYER_SCENE_UID    : String = "uid://bovh403sqglwm"
@@ -47,10 +48,11 @@ var rng = RandomNumberGenerator.new()
 @onready var health_crystal = preload("res://Scenes/Crystals/HealthCrystal/HealthCrystal.tscn")
 
 # State
-@export var score             : int = 0
-@export var lives             : int = 3
-@export var money             : int = 0
-@export var current_level     : int = 1
+var score             : int = 0
+var overallScore      : int = 0
+var lives             : int = 3
+var money             : int = 0
+var current_level     : int = 1
 
 func _ready() -> void:
 	load_menu(MAIN_MENU_SCENE)
@@ -173,9 +175,17 @@ func _deferred_load_level(level_scene_uid : String) -> void:
 		#TODO (main menu) : Should have fall back scene
 	
 	_current_level = new_level_packed.instantiate() as BaseLevel
-	_current_level.num_asteroids = STARTING_DIFFICULTY + current_level
-
-	_current_level.request_lg_ass_spawn.connect(_on_request_lg_ass_spawn)
+	
+	if _current_level is Level:
+		_current_level.num_asteroids = STARTING_DIFFICULTY + current_level
+		_current_level.request_lg_ass_spawn.connect(_on_request_lg_ass_spawn)
+	
+	if _current_level is CountScoreLevel:
+		_current_level.currentScore = overallScore
+		_current_level.levelScore = score
+		_current_level.reset_level_score.connect(_on_reset_level_score)
+		_current_level.set_overall_score.connect(_on_set_overall_score)
+		_current_level.counting_score_complete.connect(_complete_level)
 	
 	level_root.add_child(_current_level)
 	
@@ -279,6 +289,12 @@ func update_score(points : int):
 	score += points
 	hud.update_score_label(score)
 
+func _on_set_overall_score(newScore : int):
+	overallScore = newScore
+
+func _on_reset_level_score():
+	score = 0
+	hud.update_score_label(score)
 
 # Check if there are any asteroids left in EntityRoot, if there aren't end the level.
 func _on_level_end_timer_timeout():
@@ -298,10 +314,13 @@ func _complete_level():
 			continue
 		entity.queue_free()
 	
-	print("Level is done!")
-	current_level += 1
-	hud.update_level_label(current_level)
-	load_level(LEVEL_SCENE_UID)
+	# Iterate the level number after you're done counting score
+	if _current_level is CountScoreLevel:
+		current_level += 1
+		hud.update_level_label(current_level)
+		load_level(LEVEL_SCENE_UID)
+	elif _current_level is Level:
+		load_level(COUNT_SCORE_UID)
 	
 	if player != null:
 		player.reset_position()
