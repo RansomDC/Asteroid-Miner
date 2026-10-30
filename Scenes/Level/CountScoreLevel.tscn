@@ -34,6 +34,7 @@ theme_override_font_sizes/font_size = 25
 text = "Total Score: "
 
 [node name="OverallScoreValue" type="Label" parent="Scores"]
+layout_mode = 0
 offset_left = 792.0
 offset_top = 384.0
 offset_right = 940.0
@@ -41,6 +42,7 @@ offset_bottom = 422.0
 theme_override_font_sizes/font_size = 25
 
 [node name="LevelScore" type="Label" parent="Scores"]
+layout_mode = 0
 offset_left = 1088.0
 offset_top = 384.0
 offset_right = 1237.0
@@ -49,6 +51,7 @@ theme_override_font_sizes/font_size = 25
 text = "Level Score: "
 
 [node name="LevelScoreValue" type="Label" parent="Scores"]
+layout_mode = 0
 offset_left = 1237.0
 offset_top = 384.0
 offset_right = 1385.0

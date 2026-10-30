@@ -183,6 +183,9 @@ func _deferred_load_level(level_scene_uid : String) -> void:
 	if _current_level is CountScoreLevel:
 		_current_level.currentScore = overallScore
 		_current_level.levelScore = score
+		_current_level.reset_level_score.connect(_on_reset_level_score)
+		_current_level.set_overall_score.connect(_on_set_overall_score)
+		_current_level.counting_score_complete.connect(_complete_level)
 	
 	level_root.add_child(_current_level)
 	
@@ -286,6 +289,12 @@ func update_score(points : int):
 	score += points
 	hud.update_score_label(score)
 
+func _on_set_overall_score(newScore : int):
+	overallScore = newScore
+
+func _on_reset_level_score():
+	score = 0
+	hud.update_score_label(score)
 
 # Check if there are any asteroids left in EntityRoot, if there aren't end the level.
 func _on_level_end_timer_timeout():
@@ -305,10 +314,13 @@ func _complete_level():
 			continue
 		entity.queue_free()
 	
-	print("Level is done!")
-	current_level += 1
-	hud.update_level_label(current_level)
-	load_level(COUNT_SCORE_UID)
+	# Iterate the level number after you're done counting score
+	if _current_level is CountScoreLevel:
+		current_level += 1
+		hud.update_level_label(current_level)
+		load_level(LEVEL_SCENE_UID)
+	elif _current_level is Level:
+		load_level(COUNT_SCORE_UID)
 	
 	if player != null:
 		player.reset_position()

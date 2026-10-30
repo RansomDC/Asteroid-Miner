@@ -1,10 +1,11 @@
 class_name CountScoreLevel extends BaseLevel
 
 signal reset_level_score()
-signal set_overall_score()
+signal set_overall_score(newScore : int)
+signal counting_score_complete()
 
 var currentScore = 0
-var levelScore   = 0
+var levelScore   = 10000
 
 @onready var overall_score_value_label : Label = $Scores/OverallScoreValue
 @onready var level_score_value_label   : Label = $Scores/LevelScoreValue
@@ -49,3 +50,20 @@ func transfer_points() -> void:
 		level_score_value_label.text = "0"
 		overall_score_value_label.text = str(target_start + source_start)
 	)
+	
+	await tween.finished
+	
+	currentScore = int(overall_score_value_label.text)
+	
+	end_level()
+
+func end_level():
+	
+	reset_level_score.emit()
+	print("HELLOOOO! ----> " + str(currentScore))
+	set_overall_score.emit(currentScore)
+	
+	await get_tree().create_timer(2.0).timeout
+	counting_score_complete.emit()
+
+# TODO: signal score changes to update main_game, end level, load next level
