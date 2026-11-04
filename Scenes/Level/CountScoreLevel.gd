@@ -60,10 +60,7 @@ func transfer_points() -> void:
 func end_level():
 	
 	reset_level_score.emit()
-	print("HELLOOOO! ----> " + str(currentScore))
 	set_overall_score.emit(currentScore)
 	
 	await get_tree().create_timer(2.0).timeout
 	counting_score_complete.emit()
-
-# TODO: signal score changes to update main_game, end level, load next level
