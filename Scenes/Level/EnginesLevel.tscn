@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=3 uid="uid://bxhbwro8irrqr"]
+
+[ext_resource type="Script" path="res://Scenes/Level/EnginesLevel.gd" id="1_ghfvf"]
+[ext_resource type="Script" path="res://Scripts/Components/ShopComponent.gd" id="2_kv1yx"]
+[ext_resource type="Script" path="res://Scenes/Level/PlayerSpawnLocation.gd" id="2_tk27j"]
+[ext_resource type="PackedScene" uid="uid://j3b026we2hbk" path="res://Scenes/Storefront/Storefront.tscn" id="3_4rdh3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jnwjf"]
+radius = 64.0
+
+[node name="EnginesLevel" type="Node"]
+script = ExtResource("1_ghfvf")
+
+[node name="ShopComponent" type="Node" parent="."]
+script = ExtResource("2_kv1yx")
+
+[node name="PlayerSpawnPosition" type="Node2D" parent="."]
+position = Vector2(960, 540)
+
+[node name="PlayerSpawnLocation" type="Area2D" parent="PlayerSpawnPosition"]
+script = ExtResource("2_tk27j")
+
+[node name="PlayerSpawnArea" type="CollisionShape2D" parent="PlayerSpawnPosition/PlayerSpawnLocation"]
+shape = SubResource("CircleShape2D_jnwjf")
+
+[node name="Exit" parent="." instance=ExtResource("3_4rdh3")]
+position = Vector2(960, 896)
