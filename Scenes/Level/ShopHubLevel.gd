@@ -1,7 +1,11 @@
 class_name ShopHubLevel extends BaseLevel
 
-# Signals
-signal my_signal()
+# Refs
+#const LEVEL_SCENE_UID     : String = "uid://cuvxplv7nn65r"
+const SHIELDS_SHOP_UID     : String = ""
+const WEAPONS_SHOP_UID     : String = ""
+const ENGINES_SHOP_UID     : String = ""
+
 
 # Node Refs
 @onready var ShieldStore = $ShieldStore
@@ -21,3 +25,17 @@ func _ready():
 	Exit.ShopName = "Exit"
 
 
+func _on_shield_shop_area_area_entered(_area):
+	request_scene_change.emit(SHIELDS_SHOP_UID)
+
+
+func _on_weapons_shop_area_area_entered(_area):
+	request_scene_change.emit(WEAPONS_SHOP_UID)
+
+
+func _on_engines_shop_area_area_entered(_area):
+	request_scene_change.emit(ENGINES_SHOP_UID)
+
+
+func _on_exit_area_area_entered(_area):
+	complete_current_level.emit()

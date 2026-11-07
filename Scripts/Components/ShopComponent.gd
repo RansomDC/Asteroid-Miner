@@ -1,11 +1,8 @@
 extends Node
 
+signal request_scene_change(scene_uid: String)
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+const SHOP_HUB_UID : String = "uid://bjo3rstmax8wa"
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+func _on_exit_area_area_entered(area):
+	request_scene_change.emit(SHOP_HUB_UID)

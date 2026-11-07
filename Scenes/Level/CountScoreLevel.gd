@@ -2,7 +2,6 @@ class_name CountScoreLevel extends BaseLevel
 
 signal reset_level_score()
 signal set_overall_score(newScore : int)
-signal counting_score_complete()
 
 var currentScore = 0
 var levelScore   = 10000
@@ -63,4 +62,4 @@ func end_level():
 	set_overall_score.emit(currentScore)
 	
 	await get_tree().create_timer(2.0).timeout
-	counting_score_complete.emit()
+	complete_current_level.emit()

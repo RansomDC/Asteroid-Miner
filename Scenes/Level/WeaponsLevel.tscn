@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://iymeo3quy0cm"]
+[gd_scene load_steps=7 format=3 uid="uid://iymeo3quy0cm"]
 
 [ext_resource type="Script" path="res://Scenes/Level/WeaponsLevel.gd" id="1_x3vu8"]
 [ext_resource type="Script" path="res://Scenes/Level/PlayerSpawnLocation.gd" id="2_3wfqt"]
@@ -7,6 +7,9 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jnwjf"]
 radius = 64.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wy2ui"]
+size = Vector2(64, 64)
 
 [node name="WeaponsLevel" type="Node"]
 script = ExtResource("1_x3vu8")
@@ -26,3 +29,11 @@ shape = SubResource("CircleShape2D_jnwjf")
 
 [node name="Exit" parent="." instance=ExtResource("3_0q1cn")]
 position = Vector2(960, 896)
+
+[node name="ExitArea" type="Area2D" parent="Exit"]
+
+[node name="Exit Collision" type="CollisionShape2D" parent="Exit/ExitArea"]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_wy2ui")
+
+[connection signal="area_entered" from="Exit/ExitArea" to="ShopComponent" method="_on_exit_area_area_entered"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://bjo3rstmax8wa"]
+[gd_scene load_steps=6 format=3 uid="uid://bjo3rstmax8wa"]
 
 [ext_resource type="Script" path="res://Scenes/Level/ShopHubLevel.gd" id="1_nnts3"]
 [ext_resource type="Script" path="res://Scenes/Level/PlayerSpawnLocation.gd" id="2_it1hc"]
@@ -6,6 +6,9 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jnwjf"]
 radius = 64.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2av2y"]
+size = Vector2(64, 64)
 
 [node name="ShopHubLevel" type="Node"]
 script = ExtResource("1_nnts3")
@@ -22,11 +25,40 @@ shape = SubResource("CircleShape2D_jnwjf")
 [node name="ShieldStore" parent="." instance=ExtResource("3_eu0f7")]
 position = Vector2(704, 384)
 
+[node name="ShieldShopArea" type="Area2D" parent="ShieldStore"]
+
+[node name="ShieldShopCollision" type="CollisionShape2D" parent="ShieldStore/ShieldShopArea"]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_2av2y")
+
 [node name="WeaponsStore" parent="." instance=ExtResource("3_eu0f7")]
 position = Vector2(960, 216)
+
+[node name="WeaponsShopArea" type="Area2D" parent="WeaponsStore"]
+
+[node name="WeaponsShopCollision" type="CollisionShape2D" parent="WeaponsStore/WeaponsShopArea"]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_2av2y")
 
 [node name="EnginesStore" parent="." instance=ExtResource("3_eu0f7")]
 position = Vector2(1216, 384)
 
+[node name="EnginesShopArea" type="Area2D" parent="EnginesStore"]
+
+[node name="EnginesShopCollision" type="CollisionShape2D" parent="EnginesStore/EnginesShopArea"]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_2av2y")
+
 [node name="Exit" parent="." instance=ExtResource("3_eu0f7")]
 position = Vector2(960, 896)
+
+[node name="ExitArea" type="Area2D" parent="Exit"]
+
+[node name="Exit Collision" type="CollisionShape2D" parent="Exit/ExitArea"]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_2av2y")
+
+[connection signal="area_entered" from="ShieldStore/ShieldShopArea" to="." method="_on_shield_shop_area_area_entered"]
+[connection signal="area_entered" from="WeaponsStore/WeaponsShopArea" to="." method="_on_weapons_shop_area_area_entered"]
+[connection signal="area_entered" from="EnginesStore/EnginesShopArea" to="." method="_on_engines_shop_area_area_entered"]
+[connection signal="area_entered" from="Exit/ExitArea" to="." method="_on_exit_area_area_entered"]
