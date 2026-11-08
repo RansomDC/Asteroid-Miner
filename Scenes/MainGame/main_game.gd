@@ -192,7 +192,6 @@ func _deferred_load_level(level_scene_uid : String) -> void:
 		_current_level.levelScore = score
 		_current_level.reset_level_score.connect(_on_reset_level_score)
 		_current_level.set_overall_score.connect(_on_set_overall_score)
-		_current_level.complete_current_level.connect(_complete_level)
 	
 	level_root.add_child(_current_level)
 	
@@ -331,6 +330,7 @@ func _on_level_end_timer_timeout():
 func _complete_level():
 	await fadeTransition.fade(1.0, 1.0).finished
 	var entities = entity_root.get_children()
+	print(_current_level.scene_file_path)
 	
 	# Iterate the level number after you're done shopping
 	if _current_level is Level:

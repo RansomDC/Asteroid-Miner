@@ -2,9 +2,9 @@ class_name ShopHubLevel extends BaseLevel
 
 # Refs
 #const LEVEL_SCENE_UID     : String = "uid://cuvxplv7nn65r"
-const SHIELDS_SHOP_UID     : String = ""
-const WEAPONS_SHOP_UID     : String = ""
-const ENGINES_SHOP_UID     : String = ""
+const SHIELDS_SHOP_UID     : String = "uid://dpllwm07ms70m"
+const WEAPONS_SHOP_UID     : String = "uid://iymeo3quy0cm"
+const ENGINES_SHOP_UID     : String = "uid://bxhbwro8irrqr"
 
 
 # Node Refs

@@ -1,17 +1,19 @@
-class_name ShieldsLevel extends BaseLevel
+class_name ShieldsLevel extends BaseShop
 
 # Signals
-signal my_signal()
+signal example_signal()
 
 # Node Refs
-@onready var example = $ShieldStore
+@onready var exit = $Exit
 
 # Props
-var myProp : int = 0
+var myExampleProp : int = 0
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	exit.ShopName = "Exit"
 
 
+func _on_exit_area_area_entered(area):
+	send_leave_shop_request()

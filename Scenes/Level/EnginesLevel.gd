@@ -1,17 +1,18 @@
-class_name EnginesLevel extends BaseLevel
+class_name EnginesLevel extends BaseShop
 
 # Signals
 signal my_signal()
 
 # Node Refs
-@onready var example = $ShieldStore
+@onready var exit = $Exit
 
 # Props
 var myProp : int = 0
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	exit.ShopName = "Exit"
 
 
+func _on_exit_area_area_entered(area):
+	send_leave_shop_request()
