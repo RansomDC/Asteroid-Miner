@@ -4,10 +4,10 @@ extends Node
 ## Main entry point for the game.
 ## Responsible for setting up teh World layers and coordinating high-level systems
 
-# TODO: main menu
 const LEVEL_SCENE_UID     : String = "uid://cuvxplv7nn65r"
 const COUNT_SCORE_UID     : String = "uid://b3m4a6w6q6764"
 const MAIN_MENU_SCENE     : String = "uid://cugbd0gchmoe7"
+const SHOP_HUB_UID        : String = "uid://bjo3rstmax8wa"
 
 const PLAYER_SCENE_UID    : String = "uid://bovh403sqglwm"
 const HUD_SCENE_UID       : String = "uid://dnof5csgfeu1f"
@@ -61,7 +61,10 @@ func _ready() -> void:
 
 func _process(_delta):
 	if Input.is_action_just_pressed("debug_destroy_ass"):
-		destroy_asteroids()
+		debug_destroy_asteroids()
+	
+	if Input.is_action_just_pressed("debug_finish_level"):
+		debug_finish_level()
 
 
 func load_menu(menu_scene: String) -> void:
@@ -176,6 +179,10 @@ func _deferred_load_level(level_scene_uid : String) -> void:
 	
 	_current_level = new_level_packed.instantiate() as BaseLevel
 	
+	_current_level.request_scene_change.connect(_on_request_scene_change)
+	_current_level.complete_current_level.connect(_on_complete_current_level)
+	
+	# Level is the main gameplay level (I'm too lazy to change the name right now)
 	if _current_level is Level:
 		_current_level.num_asteroids = STARTING_DIFFICULTY + current_level
 		_current_level.request_lg_ass_spawn.connect(_on_request_lg_ass_spawn)
@@ -185,13 +192,28 @@ func _deferred_load_level(level_scene_uid : String) -> void:
 		_current_level.levelScore = score
 		_current_level.reset_level_score.connect(_on_reset_level_score)
 		_current_level.set_overall_score.connect(_on_set_overall_score)
-		_current_level.counting_score_complete.connect(_complete_level)
 	
 	level_root.add_child(_current_level)
 	
 	#Allow level to fully proces before accessing it
 	await get_tree().process_frame
 	_place_player_at_level_spawn()
+
+
+func _on_request_scene_change(levelUid : String) -> void:
+	await fadeTransition.fade(1.0, 1.0).finished
+	
+	if player != null:
+		player.reset_position()
+	
+	load_level(levelUid)
+	_place_player_at_level_spawn()
+	
+	fadeTransition.fade(0, 0.5)
+
+
+func _on_complete_current_level() -> void:
+	_complete_level()
 
 
 ## Finds the default spawn location in currently loaded leevl, and places
@@ -299,7 +321,6 @@ func _on_reset_level_score():
 # Check if there are any asteroids left in EntityRoot, if there aren't end the level.
 func _on_level_end_timer_timeout():
 	var entities = entity_root.get_children()
-	print(entities)
 	for entity in entities:
 		if entity is Asteroid_lg or entity is Asteroid_md or entity is Asteroid_sm:
 			return
@@ -309,18 +330,22 @@ func _on_level_end_timer_timeout():
 func _complete_level():
 	await fadeTransition.fade(1.0, 1.0).finished
 	var entities = entity_root.get_children()
-	for entity in entities:
-		if entity is Player:
-			continue
-		entity.queue_free()
+	print(_current_level.scene_file_path)
 	
-	# Iterate the level number after you're done counting score
-	if _current_level is CountScoreLevel:
+	# Iterate the level number after you're done shopping
+	if _current_level is Level:
+		# Clear crystals / enemies from the entity root
+		for entity in entities:
+			if entity is Player:
+				continue
+			entity.queue_free()
+		load_level(COUNT_SCORE_UID)
+	elif _current_level is CountScoreLevel:
+		load_level(SHOP_HUB_UID)
+	elif _current_level is ShopHubLevel:
 		current_level += 1
 		hud.update_level_label(current_level)
 		load_level(LEVEL_SCENE_UID)
-	elif _current_level is Level:
-		load_level(COUNT_SCORE_UID)
 	
 	if player != null:
 		player.reset_position()
@@ -330,13 +355,14 @@ func _complete_level():
 
 ### DEBUG ACTIONS ###
 
-func destroy_asteroids():
+func debug_destroy_asteroids():
 		var entities = entity_root.get_children()
 		for entity in entities:
 			if (entity is Asteroid_lg || entity is Asteroid_md || entity is Asteroid_sm):
 				entity.destroy()
 
-
+func debug_finish_level():
+	_complete_level()
 
 
 

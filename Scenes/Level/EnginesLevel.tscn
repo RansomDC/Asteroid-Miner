@@ -1,0 +1,34 @@
+[gd_scene load_steps=6 format=3 uid="uid://bxhbwro8irrqr"]
+
+[ext_resource type="Script" path="res://Scenes/Level/EnginesLevel.gd" id="1_ghfvf"]
+[ext_resource type="Script" path="res://Scenes/Level/PlayerSpawnLocation.gd" id="2_tk27j"]
+[ext_resource type="PackedScene" uid="uid://j3b026we2hbk" path="res://Scenes/Storefront/Storefront.tscn" id="3_4rdh3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jnwjf"]
+radius = 64.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_e4ahk"]
+size = Vector2(64, 64)
+
+[node name="EnginesLevel" type="Node"]
+script = ExtResource("1_ghfvf")
+
+[node name="PlayerSpawnPosition" type="Node2D" parent="."]
+position = Vector2(960, 540)
+
+[node name="PlayerSpawnLocation" type="Area2D" parent="PlayerSpawnPosition"]
+script = ExtResource("2_tk27j")
+
+[node name="PlayerSpawnArea" type="CollisionShape2D" parent="PlayerSpawnPosition/PlayerSpawnLocation"]
+shape = SubResource("CircleShape2D_jnwjf")
+
+[node name="Exit" parent="." instance=ExtResource("3_4rdh3")]
+position = Vector2(960, 896)
+
+[node name="ExitArea" type="Area2D" parent="Exit"]
+
+[node name="Exit Collision" type="CollisionShape2D" parent="Exit/ExitArea"]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_e4ahk")
+
+[connection signal="area_entered" from="Exit/ExitArea" to="." method="_on_exit_area_area_entered"]
