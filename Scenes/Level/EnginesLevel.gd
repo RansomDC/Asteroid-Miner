@@ -15,4 +15,5 @@ func _ready():
 
 
 func _on_exit_area_area_entered(area):
-	send_leave_shop_request()
+	if area.get_parent() is Player:
+		send_leave_shop_request()

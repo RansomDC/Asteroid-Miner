@@ -25,17 +25,23 @@ func _ready():
 	Exit.ShopName = "Exit"
 
 
-func _on_shield_shop_area_area_entered(_area):
-	request_scene_change.emit(SHIELDS_SHOP_UID)
+func _on_shield_shop_area_area_entered(area):
+	print("Area class: ", area.get_class())
+	print("Area name: ", area.name)
+	if area.get_parent() is Player:
+		request_scene_change.emit(SHIELDS_SHOP_UID)
 
 
-func _on_weapons_shop_area_area_entered(_area):
-	request_scene_change.emit(WEAPONS_SHOP_UID)
+func _on_weapons_shop_area_area_entered(area):
+	if area.get_parent() is Player:
+		request_scene_change.emit(WEAPONS_SHOP_UID)
 
 
-func _on_engines_shop_area_area_entered(_area):
-	request_scene_change.emit(ENGINES_SHOP_UID)
+func _on_engines_shop_area_area_entered(area):
+	if area.get_parent() is Player:
+		request_scene_change.emit(ENGINES_SHOP_UID)
 
 
-func _on_exit_area_area_entered(_area):
-	complete_current_level.emit()
+func _on_exit_area_area_entered(area):
+	if area.get_parent() is Player:
+		complete_current_level.emit()

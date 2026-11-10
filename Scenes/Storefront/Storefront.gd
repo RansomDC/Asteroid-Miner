@@ -1,4 +1,4 @@
-extends Node2D
+class_name Storefront extends Node2D
 
 # Node Refs
 @onready var ShopName = $ShopName:

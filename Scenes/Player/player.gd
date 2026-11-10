@@ -27,6 +27,7 @@ var laser_scene = preload("res://Scenes/Laser/laser.tscn")
 
 @onready var shipParts = destructionComponent.getParts()
 
+var is_disabled : bool = false
 var playerIsDead = false
 var deathMomentumDirection = Vector2.ZERO
 
@@ -43,6 +44,7 @@ func _process(_delta):
 func _physics_process(delta):
 	
 	get_input()
+	
 	if !playerIsDead:
 		rotation += rotation_direction * turn_speed * delta
 	
@@ -68,18 +70,14 @@ func navScreen():
 
 #region Laser
 func fire_laser():
-	# Now we do this stuff in mainGame
-#	var l = laser_scene.instantiate()
-#	l.global_position = cannon.global_position
-#	l.rotation = rotation
-	emit_signal("laser_fired", cannon.global_position, rotation)
+	laser_fired.emit(cannon.global_position, rotation)
 #endregion
 
 func _on_player_area_area_entered(area):
 	# Player loses health when a destructive area enters it's area
 	if (area is Destructor) && (!playerIsDead):
 		health -= 1
-		emit_signal("update_health", health)
+		update_health.emit(health)
 		if health < 0:
 			die(area)
 		
@@ -94,6 +92,10 @@ func _on_player_area_area_entered(area):
 	elif area is MoneyCrystal:
 		collect_money.emit()
 		print("You got a money crystal!")
+		
+	elif area.get_parent() is Storefront:
+		# Somehow disable the player (movement and controls)
+		pass
 
 func die(killer):
 	if !playerIsDead:
