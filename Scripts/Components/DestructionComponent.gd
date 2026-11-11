@@ -38,8 +38,10 @@ func _explode_action(delta):
 		part.rotation += part.disperseRotation * delta
 		
 		# Make the parts fade out
-		part.default_color.a8 -= 1
-			
+		if part is Line2D:
+			part.default_color.a8 -= 1
+		elif part is Sprite2D:
+			part.modulate.a8 -= 1
 
 func getParts():
 	var parts = destructable_object.get_children()
