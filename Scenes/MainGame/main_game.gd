@@ -183,8 +183,7 @@ func _deferred_load_level(level_scene_uid : String) -> void:
 	# Level is the main gameplay level (I'm too lazy to change the name right now)
 	if _current_level is Level:
 		_current_level.num_asteroids = STARTING_DIFFICULTY + current_level
-		#_current_level.request_lg_ass_spawn.connect(_on_request_lg_ass_spawn)
-		_current_level.spawn_asteroid_request.connect(_on_spawn_asteroid_request)
+		_current_level.spawn_asteroid_request.connect(on_spawn_asteroid_request)
 	
 	if _current_level is CountScoreLevel:
 		_current_level.currentScore = overallScore
@@ -239,58 +238,20 @@ func _on_laser_fired(position : Vector2, rotation : float):
 # positionx : An array of one or more positions
 # assType   : What concrete class the asteroid is (Asteroid_lg, Asteroid_md, Asteroid_sm)
 #
-func _on_spawn_asteroid_request(positionx : Array, assType : Script) -> void:
+func on_spawn_asteroid_request(positionx : Array, assType : Script) -> void:
 	for position in positionx:
 		var new_asteroid
 		if assType == Asteroid_lg:
 			new_asteroid = asteroid_manager.asteroid_lg.instantiate()
-			_setup_asteroid(new_asteroid, position)
+			asteroid_manager.setup_asteroid(new_asteroid, position)
 		elif assType == Asteroid_md:
 			new_asteroid = asteroid_manager.asteroid_md.instantiate()
-			_setup_asteroid(new_asteroid, position)
+			asteroid_manager.setup_asteroid(new_asteroid, position)
 		elif assType == Asteroid_sm:
 			new_asteroid = asteroid_manager.asteroid_sm.instantiate()
-			_setup_asteroid(new_asteroid, position)
-		
+			asteroid_manager.setup_asteroid(new_asteroid, position)
 
-func _setup_asteroid(newAsteroid : Destructor, location : Vector2):
-	newAsteroid.asteroid_destroyed.connect(_on_ass_destroyed)
-	newAsteroid.spawn_crystal.connect(_on_spawn_crystal)
-	newAsteroid.position = location
-	entity_root.add_child(newAsteroid)
-
-
-func _on_request_lg_ass_spawn(locations : Array):
-	for location in locations:
-		var new_asteroid = asteroid_manager.asteroid_lg.instantiate()
-		new_asteroid.asteroid_destroyed.connect(_on_ass_destroyed)
-		new_asteroid.spawn_crystal.connect(_on_spawn_crystal)
-		new_asteroid.position = location
-		entity_root.add_child(new_asteroid)
-
-
-func _on_ass_destroyed(position : Vector2, asteroidType : Destructor):
-	if asteroidType is Asteroid_lg:
-		update_score(150)
-		for ass in rng.randf_range(2, 3):
-			var new_asteroid = asteroid_manager.asteroid_md.instantiate()
-			new_asteroid.asteroid_destroyed.connect(_on_ass_destroyed)
-			new_asteroid.spawn_crystal.connect(_on_spawn_crystal)
-			new_asteroid.position = position
-			entity_root.call_deferred("add_child", new_asteroid)
-	elif asteroidType is Asteroid_md:
-		update_score(100)
-		for ass in rng.randf_range(2, 4):
-			var new_asteroid = asteroid_manager.asteroid_sm.instantiate()
-			new_asteroid.asteroid_destroyed.connect(_on_ass_destroyed)
-			new_asteroid.position = position
-			entity_root.call_deferred("add_child", new_asteroid)
-	elif asteroidType is Asteroid_sm:
-		update_score(50)
-		level_end_timer.start(3)
-	
-
-func _on_spawn_crystal(position: Vector2, crystalType : PackedScene):
+func on_spawn_crystal(position: Vector2, crystalType : PackedScene):
 	var new_crystal = crystalType.instantiate()
 	new_crystal.position = position
 	entity_root.call_deferred("add_child", new_crystal)
