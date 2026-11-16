@@ -2,6 +2,7 @@ class_name Level extends BaseLevel
 
 # Signals
 signal request_lg_ass_spawn(positions: Array)
+signal spawn_asteroid_request(positions: Array, assType: Script)
 
 # Data
 @onready var viewport = get_viewport()
@@ -10,7 +11,8 @@ signal request_lg_ass_spawn(positions: Array)
 @export var num_asteroids = 3
 
 func _ready():
-	request_lg_ass_spawn.emit(_get_safe_random_positions(num_asteroids))
+	#request_lg_ass_spawn.emit(_get_safe_random_positions(num_asteroids))
+	spawn_asteroid_request.emit(_get_safe_random_positions(num_asteroids), Asteroid_lg)
 
 # Helpers
 ###

@@ -7,12 +7,12 @@ signal collect_health()
 signal collect_money()
 signal died
 
-@export var MAX_SPEED = 540
-@export var speed = 30
-@export var turn_speed = 5
-@export var rotation_direction = 0
-@export var ship_size = 45
-@export var health := 3
+var MAX_SPEED = 540
+var speed = 30
+var turn_speed = 5
+var rotation_direction = 0
+var ship_size = 45
+var health := 3
 
 # Components
 @onready var navigateScreen = $NavigateScreenComponent

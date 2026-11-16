@@ -1,8 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://cy6libpf1ub3r"]
+[gd_scene load_steps=3 format=3 uid="uid://cy6libpf1ub3r"]
 
 [ext_resource type="Script" path="res://Scenes/MainGame/main_game.gd" id="1_3bw54"]
+[ext_resource type="Script" path="res://Scenes/MainGame/AsteroidManager.gd" id="2_ajjog"]
 
-[node name="Main Game" type="Node"]
+[node name="MainGame" type="Node"]
 process_mode = 3
 script = ExtResource("1_3bw54")
 
@@ -10,6 +11,9 @@ script = ExtResource("1_3bw54")
 
 [node name="LevelEndTimer" type="Timer" parent="Systems"]
 one_shot = true
+
+[node name="AsteroidManager" type="Node" parent="Systems"]
+script = ExtResource("2_ajjog")
 
 [node name="World" type="Node2D" parent="."]
 process_mode = 1
