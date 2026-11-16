@@ -2,7 +2,6 @@ extends Node
 
 @onready var destructable_object = get_parent()
 @onready var parts = getParts()
-@onready var timer = $Timer
 
 @export var destroyed = false
 
@@ -53,10 +52,8 @@ func getParts():
 
 func destroy():
 	destroyed = true
-	timer.start(2.5)
+	await get_tree().create_timer(2.5).timeout
+	destructable_object.queue_free()
 
 func regen():
 	destroyed = false
-
-func _on_timer_timeout():
-	destructable_object.queue_free()
