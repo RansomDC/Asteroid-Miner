@@ -260,8 +260,8 @@ func _on_money_added():
 	money += 1
 	hud.update_money_label(money)
 
-func _on_health_added():
-	pass
+func _on_health_added(health : int):
+	hud.update_shield_bar(health)
 
 func _on_update_score(points : int):
 	score += points
