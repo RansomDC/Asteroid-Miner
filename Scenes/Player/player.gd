@@ -37,16 +37,20 @@ func _ready():
 
 func _process(_delta):
 	
-	if playerIsDead: return
+	if playerIsDead or is_disabled: 
+		return
 	
 	if Input.is_action_just_pressed("fire"):
 		fire_laser()
 
 func _physics_process(delta):
 	
+	if is_disabled:
+		return
+	
 	get_input()
 	
-	if !playerIsDead:
+	if !playerIsDead or !is_disabled:
 		rotation += rotation_direction * turn_speed * delta
 	
 	move_and_slide()
@@ -95,8 +99,9 @@ func _on_player_area_area_entered(area):
 		print("You got a money crystal!")
 		
 	elif area.get_parent() is Storefront:
-		# Somehow disable the player (movement and controls)
-		pass
+		disable_ship()
+		await get_tree().create_timer(1).timeout
+		enable_ship()
 
 func die(killer):
 	if !playerIsDead:
@@ -105,7 +110,14 @@ func die(killer):
 		emit_signal("died")
 	# get killer (e.g. asteroid) angle of movenet
 	deathMomentumDirection = killer.velocity
-	
+
+func disable_ship():
+	velocity = Vector2(0,0)
+	is_disabled = true
+
+func enable_ship():
+	is_disabled = false
+
 func respawn():
 	if playerIsDead:
 		playerIsDead = false
