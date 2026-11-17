@@ -12,6 +12,7 @@ var speed = 30
 var turn_speed = 5
 var rotation_direction = 0
 var ship_size = 45
+var maxHealth := 3
 var health := 3
 
 # Components
@@ -83,7 +84,7 @@ func _on_player_area_area_entered(area):
 		
 	# Player gains health (max of three) when a health crystal enters it's area
 	elif area is HealthCrystal:
-		if health < 3:
+		if health < maxHealth:
 			health += 1
 		update_health.emit(health)
 		print("You got a health crystal!")
