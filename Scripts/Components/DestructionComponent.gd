@@ -43,9 +43,9 @@ func _explode_action(delta):
 			part.modulate.a8 -= 1
 
 func getParts():
-	var parts = destructable_object.get_children()
+	var allParts = destructable_object.get_children()
 	var result = []
-	for child in parts:
+	for child in allParts:
 		if child is DestructablePart:
 			result.append(child)
 	return result
