@@ -8,6 +8,7 @@ const LEVEL_SCENE_UID     : String = "uid://cuvxplv7nn65r"
 const COUNT_SCORE_UID     : String = "uid://b3m4a6w6q6764"
 const MAIN_MENU_SCENE     : String = "uid://cugbd0gchmoe7"
 const SHOP_HUB_UID        : String = "uid://bjo3rstmax8wa"
+const GAME_OVER_UID       : String = "uid://cqy2c0p8rbfgv"
 
 const PLAYER_SCENE_UID    : String = "uid://bovh403sqglwm"
 const HUD_SCENE_UID       : String = "uid://dnof5csgfeu1f"
@@ -191,11 +192,15 @@ func _deferred_load_level(level_scene_uid : String) -> void:
 		_current_level.reset_level_score.connect(_on_reset_level_score)
 		_current_level.set_overall_score.connect(_on_set_overall_score)
 	
+	if _current_level is GameOverLevel:
+		_current_level.request_main_menu.connect(_on_request_main_menu)
+	
 	level_root.add_child(_current_level)
 	
 	#Allow level to fully proces before accessing it
 	await get_tree().process_frame
-	_place_player_at_level_spawn()
+	if level_scene_uid != GAME_OVER_UID:
+		_place_player_at_level_spawn()
 
 
 func _on_request_scene_change(levelUid : String) -> void:
@@ -205,7 +210,8 @@ func _on_request_scene_change(levelUid : String) -> void:
 		player.reset_position()
 	
 	load_level(levelUid)
-	_place_player_at_level_spawn()
+	if levelUid != GAME_OVER_UID:
+		_place_player_at_level_spawn()
 	
 	fadeTransition.fade(0, 0.5)
 
@@ -276,8 +282,7 @@ func _on_player_died():
 	hud.update_lives_label(lives)
 	
 	if lives < 1:
-		# Show game over screen
-		pass
+		game_over()
 	else:
 		_init_player()
 		_place_player_at_level_spawn()
@@ -336,6 +341,20 @@ func _complete_level():
 	
 	fadeTransition.fade(0, 0.5)
 
+
+func game_over():
+	await fadeTransition.fade(1.0, 1.0).finished
+	var entities = entity_root.get_children()
+	for entity in entities:
+		entity.queue_free()
+	load_level(GAME_OVER_UID)
+	
+	fadeTransition.fade(0, 0.5)
+
+func _on_request_main_menu():
+	await fadeTransition.fade(1.0, 1.0).finished
+	_deferred_load_menu(MAIN_MENU_SCENE)
+	fadeTransition.fade(0, 0.5)
 
 ### DEBUG ACTIONS ###
 

@@ -42,6 +42,9 @@ func _process(_delta):
 	
 	if Input.is_action_just_pressed("fire"):
 		fire_laser()
+	
+	if Input.is_action_just_pressed("debug_kill_player"):
+		debug_kill_player()
 
 func _physics_process(delta):
 	
@@ -84,7 +87,7 @@ func _on_player_area_area_entered(area):
 		health -= 1
 		update_health.emit(health)
 		if health < 0:
-			die(area)
+			die()
 		
 	# Player gains health (max of three) when a health crystal enters it's area
 	elif area is HealthCrystal:
@@ -103,13 +106,13 @@ func _on_player_area_area_entered(area):
 		await get_tree().create_timer(1).timeout
 		enable_ship()
 
-func die(killer):
+func die():
 	if !playerIsDead:
 		playerIsDead = true
 		destructionComponent.destroy()
 		emit_signal("died")
 	# get killer (e.g. asteroid) angle of movenet
-	deathMomentumDirection = killer.velocity
+	#deathMomentumDirection = killer.velocity
 
 func disable_ship():
 	velocity = Vector2(0,0)
@@ -123,8 +126,23 @@ func respawn():
 		playerIsDead = false
 	
 	velocity = Vector2.ZERO
-	
 
 func reset_position():
 	velocity = Vector2(0,0)
 	rotation = 0
+
+# Debug Methods
+func debug_kill_player():
+	die()
+
+
+
+
+
+
+
+
+
+
+
+
