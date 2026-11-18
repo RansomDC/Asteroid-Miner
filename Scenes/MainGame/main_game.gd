@@ -289,12 +289,20 @@ func _on_player_died():
 
 
 func _on_start_game():
+	_reset_game()
+	
 	_init_hud()
 	
 	_init_player()
 	
 	load_level(LEVEL_SCENE_UID)
 
+func _reset_game():
+	score = 0
+	overallScore = 0
+	lives = 3
+	money = 0
+	current_level = 1
 
 func update_score(points : int):
 	score += points
@@ -353,6 +361,9 @@ func game_over():
 
 func _on_request_main_menu():
 	await fadeTransition.fade(1.0, 1.0).finished
+	if is_instance_valid(hud):
+		hud.queue_free()
+		hud = null
 	_deferred_load_menu(MAIN_MENU_SCENE)
 	fadeTransition.fade(0, 0.5)
 
