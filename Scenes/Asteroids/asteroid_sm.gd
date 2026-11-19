@@ -12,7 +12,7 @@ signal asteroid_destroyed(position : Vector2, assType : Destructor)
 var asteroid_size = 32
 
 func _on_area_entered(area):
-	if area is Laser:
+	if area is Laser or area is SafeLaser:
 		area.queue_free()
 		destroy()
 	

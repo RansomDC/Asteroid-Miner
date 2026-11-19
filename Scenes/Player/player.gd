@@ -7,6 +7,7 @@ signal collect_health()
 signal collect_money()
 signal died
 
+# Basics
 var MAX_SPEED = 540
 var speed = 30
 var turn_speed = 5
@@ -14,6 +15,11 @@ var rotation_direction = 0
 var ship_size = 45
 var maxHealth := 3
 var health := 3
+
+# Upgrades
+var safe_shot_upgrade  := false
+var tripe_shot_upgrade := false
+var long_shot_upgrade  := false
 
 # Components
 @onready var navigateScreen = $NavigateScreenComponent
