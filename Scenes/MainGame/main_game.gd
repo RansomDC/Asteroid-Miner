@@ -50,7 +50,7 @@ var rng = RandomNumberGenerator.new()
 var score             : int = 0
 var overallScore      : int = 0
 var lives             : int = 3
-var money             : int = 0
+var money             : int = 5
 var current_level     : int = 1
 
 func _ready() -> void:
@@ -128,6 +128,7 @@ func _init_player() -> void:
 	player.died.connect(_on_player_died)
 	player.collect_health.connect(_on_health_added)
 	player.collect_money.connect(_on_money_added)
+	player.deduct_money.connect(_on_deduct_money)
 	
 	entity_root.call_deferred("add_child", player)
 
@@ -264,6 +265,10 @@ func on_spawn_crystal(position: Vector2, crystalType : PackedScene):
 
 func _on_money_added():
 	money += 1
+	hud.update_money_label(money)
+
+func _on_deduct_money(amount : int):
+	money -= amount
 	hud.update_money_label(money)
 
 func _on_health_added(health : int):

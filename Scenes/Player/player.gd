@@ -6,6 +6,7 @@ signal update_health(health)
 signal collect_health()
 signal collect_money()
 signal died
+signal deduct_money(amount : int)
 
 # Basics
 var MAX_SPEED = 540
@@ -18,7 +19,7 @@ var health := 3
 
 # Upgrades
 var safe_shot_upgrade  := false
-var tripe_shot_upgrade := false
+var triple_shot_upgrade := false
 var long_shot_upgrade  := false
 
 # Components
@@ -28,6 +29,7 @@ var long_shot_upgrade  := false
 # Node References
 @onready var collisionShape = $PlayerArea/PlayerCollisionPoly
 @onready var cannon = $Cannon
+@onready var mainGame = get_parent().get_parent().get_parent()
 
 # Preloads
 var laser_scene = preload("res://Scenes/Laser/laser.tscn")
@@ -111,6 +113,8 @@ func _on_player_area_area_entered(area):
 		disable_ship()
 		await get_tree().create_timer(1).timeout
 		enable_ship()
+	elif area.get_parent() is Upgrade:
+		try_get_upgrade(area)
 
 func die():
 	if !playerIsDead:
@@ -119,6 +123,27 @@ func die():
 		emit_signal("died")
 	# get killer (e.g. asteroid) angle of movenet
 	#deathMomentumDirection = killer.velocity
+
+func try_get_upgrade(area):
+	# Check if player has enough money
+	var upgrade = area.get_parent()
+	print("Your money: " + str(mainGame.money) + ". The cost: " + str(upgrade.upgrade_cost))
+	if mainGame.money >= upgrade.upgrade_cost:
+		deduct_money.emit(upgrade.upgrade_cost)
+		enable_upgrade(upgrade.upgrade_type)
+		
+
+func enable_upgrade(type : Enums.Upgrades):
+	match type:
+		Enums.Upgrades.SAFE_SHOT:
+			safe_shot_upgrade = true
+			print("You have safe shot!")
+		Enums.Upgrades.TRI_SHOT:
+			triple_shot_upgrade = true
+			print("You have triple shot!")
+		Enums.Upgrades.LONG_SHOT:
+			long_shot_upgrade = true
+			print("You have long shot!")
 
 func disable_ship():
 	velocity = Vector2(0,0)

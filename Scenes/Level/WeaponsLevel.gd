@@ -16,17 +16,11 @@ var myProp : int = 0
 func _ready():
 	exit.ShopName = "Exit"
 	
-	safeShotUpgrade.upgrade_label = "Crystal Safe Shot"
-	safeShotUpgrade.upgrade_image_path = "res://Assets/Images/CrystalSafeShot.png"
 	
-	triShotUpgrade.upgrade_label = "Tiple Shot"
-	triShotUpgrade.upgrade_image_path = "res://Assets/Images/TripleShotIcon.png"
+	safeShotUpgrade.upgrade_constructor(Enums.Upgrades.SAFE_SHOT, 4, "res://Assets/Images/CrystalSafeShot.png", "Crystal Safe Shot")
+	triShotUpgrade.upgrade_constructor(Enums.Upgrades.TRI_SHOT, 4, "res://Assets/Images/TripleShotIcon.png", "Triple Shot")
+	longShotUpgrade.upgrade_constructor(Enums.Upgrades.LONG_SHOT, 3, "res://Assets/Images/LongShotIcon.png", "Long Shot")
 	
-	longShotUpgrade.upgrade_label = "Long Shot"
-	longShotUpgrade.upgrade_image_path = "res://Assets/Images/LongShotIcon.png"
-
-
-
 
 func _on_exit_area_area_entered(area):
 	if area.get_parent() is Player:
