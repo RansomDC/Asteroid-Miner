@@ -43,6 +43,7 @@ var rng = RandomNumberGenerator.new()
 
 # Preload Scenes
 @onready var laser          = preload("res://Scenes/Laser/laser.tscn")
+@onready var safeLaser      = preload("res://Scenes/Laser/safeLaser.tscn")
 @onready var money_crystal  = preload("res://Scenes/Crystals/MoneyCrystal/MoneyCrystal.tscn")
 @onready var health_crystal = preload("res://Scenes/Crystals/HealthCrystal/HealthCrystal.tscn")
 
@@ -235,8 +236,13 @@ func _place_player_at_level_spawn() -> void:
 	player.global_position = _current_level.get_default_player_spawn()
 
 
-func _on_laser_fired(position : Vector2, rotation : float):
-	var l = laser.instantiate()
+func _on_laser_fired(laserType : Enums.LaserTypes, position : Vector2, rotation : float):
+	var l
+	match laserType:
+		Enums.LaserTypes.DEFAULT:
+			l = laser.instantiate()
+		Enums.LaserTypes.SAFE:
+			l = safeLaser.instantiate()
 	l.global_position = position
 	l.rotation = rotation
 	entity_root.add_child(l)

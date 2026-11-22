@@ -12,3 +12,8 @@ enum Upgrades {
 	HEAVY_ENGINES,
 	BRAKES
 }
+
+enum LaserTypes {
+	DEFAULT,
+	SAFE
+}
