@@ -18,7 +18,7 @@ var rng = RandomNumberGenerator.new()
 var asteroid_size = 80
 
 func _on_area_entered(area):
-	if area is Laser:
+	if area is Laser or area is SafeLaser:
 		area.queue_free()
 		destroy()
 	

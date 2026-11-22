@@ -1,0 +1,19 @@
+extends Node
+
+enum Upgrades {
+	NONE,
+	SAFE_SHOT,
+	TRI_SHOT,
+	LONG_SHOT,
+	MED_SHIELD,
+	HEAVY_SHIELD,
+	POWER_SHIELD,
+	MED_ENGINES,
+	HEAVY_ENGINES,
+	BRAKES
+}
+
+enum LaserTypes {
+	DEFAULT,
+	SAFE
+}

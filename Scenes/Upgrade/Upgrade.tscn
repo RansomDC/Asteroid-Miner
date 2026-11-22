@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://dgifdjx1io3k0"]
+
+[ext_resource type="Script" path="res://Scenes/Upgrade/Upgrade.gd" id="1_44rsq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6vtbq"]
+size = Vector2(96, 80)
+
+[node name="Upgrade" type="Node2D"]
+script = ExtResource("1_44rsq")
+
+[node name="UpgradeImage" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+
+[node name="UpgradeLabel" type="Label" parent="."]
+offset_left = -128.0
+offset_top = 40.0
+offset_right = 128.0
+offset_bottom = 72.0
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+
+[node name="UpgradeArea" type="Area2D" parent="."]
+
+[node name="UpgradeCollision" type="CollisionShape2D" parent="UpgradeArea"]
+position = Vector2(0, -8)
+shape = SubResource("RectangleShape2D_6vtbq")
