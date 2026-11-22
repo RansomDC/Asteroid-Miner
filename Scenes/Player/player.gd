@@ -1,7 +1,7 @@
 class_name Player extends CharacterBody2D
 
 # Signals
-signal laser_fired(laserType : Enums.LaserTypes, position : Vector2, rotation : float)
+signal laser_fired(position : Vector2, rotation : float, safeEnabled : bool, triEnabled : bool, longEnabled : bool)
 signal update_health(health)
 signal collect_health()
 signal collect_money()
@@ -86,10 +86,7 @@ func navScreen():
 
 #region Laser
 func fire_laser():
-	if safe_shot_upgrade:
-		laser_fired.emit(Enums.LaserTypes.SAFE, cannon.global_position, rotation)
-	else:
-		laser_fired.emit(Enums.LaserTypes.SAFE, cannon.global_position, rotation)
+	laser_fired.emit(cannon.global_position, rotation, safe_shot_upgrade, triple_shot_upgrade, long_shot_upgrade)
 #endregion
 
 func _on_player_area_area_entered(area):

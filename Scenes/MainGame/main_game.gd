@@ -65,6 +65,9 @@ func _process(_delta):
 	
 	if Input.is_action_just_pressed("debug_finish_level"):
 		debug_finish_level()
+	
+	if Input.is_action_just_pressed("debug_add_money"):
+		debug_money_added()
 
 
 func load_menu(menu_scene: String) -> void:
@@ -122,6 +125,7 @@ func _init_player() -> void:
 	
 	# TODO: make a setup() method for easier setting of Player properties
 	player.health = 3
+	
 	
 	# Connecting Player Signals
 	player.update_health.connect(_on_update_health)
@@ -236,16 +240,33 @@ func _place_player_at_level_spawn() -> void:
 	player.global_position = _current_level.get_default_player_spawn()
 
 
-func _on_laser_fired(laserType : Enums.LaserTypes, position : Vector2, rotation : float):
+func _on_laser_fired(position : Vector2, rotation : float, safeEnabled : bool, triEnabled : bool, longEnabled : bool) -> void:
 	var l
-	match laserType:
-		Enums.LaserTypes.DEFAULT:
-			l = laser.instantiate()
-		Enums.LaserTypes.SAFE:
-			l = safeLaser.instantiate()
-	l.global_position = position
-	l.rotation = rotation
-	entity_root.add_child(l)
+	var l2
+	var l3
+	if safeEnabled:
+		l = safeLaser.instantiate()
+		if triEnabled:
+			l2 = safeLaser.instantiate()
+			l3 = safeLaser.instantiate()
+	else:
+		l = laser.instantiate()
+		if triEnabled:
+			l2 = safeLaser.instantiate()
+			l3 = safeLaser.instantiate()
+	
+	if triEnabled:
+		spawn_laser(position, rotation, l)
+		spawn_laser(position, rotation + 0.2, l2)
+		spawn_laser(position, rotation - 0.2, l3)
+	else:
+		spawn_laser(position, rotation, l)
+		
+
+func spawn_laser(position : Vector2, rotation : float, instantiatedLaser):
+	instantiatedLaser.global_position = position
+	instantiatedLaser.rotation = rotation
+	entity_root.add_child(instantiatedLaser)
 
 # Spawn any number of asteroids based on the number of positions received.
 # positionx : An array of one or more positions
@@ -389,7 +410,9 @@ func debug_destroy_asteroids():
 func debug_finish_level():
 	_complete_level()
 
-
+func debug_money_added():
+	money += 5
+	hud.update_money_label(money)
 
 
 
