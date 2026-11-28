@@ -19,6 +19,10 @@ script = ExtResource("2_ajjog")
 [node name="UpgradeManager" type="Node" parent="Systems"]
 script = ExtResource("3_tlact")
 
+[node name="FireCooldownTimer" type="Timer" parent="Systems"]
+wait_time = 0.2
+one_shot = true
+
 [node name="World" type="Node2D" parent="."]
 process_mode = 1
 

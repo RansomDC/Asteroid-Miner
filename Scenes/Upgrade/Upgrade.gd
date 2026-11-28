@@ -17,8 +17,8 @@ var upgrade_label: String:
 		upgradeLabel.text = str(value)
 
 # Constructor
-func upgrade_constructor(upgradeType : Enums.Upgrades, upgradeCost : int, upgradeImagePath : String, upgradeLabel : String):
+func upgrade_constructor(upgradeType : Enums.Upgrades, upgradeCost : int, upgradeImagePath : String, upgradeName : String):
 	upgrade_type = upgradeType
 	upgrade_cost = upgradeCost
 	upgrade_image_path = upgradeImagePath
-	upgrade_label = upgradeLabel
+	upgrade_label = upgradeName
