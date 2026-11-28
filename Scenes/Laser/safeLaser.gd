@@ -4,8 +4,15 @@ class_name SafeLaser extends Area2D
 @export var size = 5
 
 @onready var navigateScreen = $NavigateScreenComponent
+@onready var timer = $Timer
 
 var movement_vector := Vector2(0, -1)
+
+var timer_length: float = 1.15
+
+func _ready():
+	timer.wait_time = timer_length
+	timer.start()
 
 ## Provide the movement for the laser, movement respects the rotational angle of the Laser Area2D
 func _physics_process(delta):

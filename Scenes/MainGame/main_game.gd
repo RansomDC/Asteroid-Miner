@@ -38,8 +38,9 @@ var rng = RandomNumberGenerator.new()
 @onready var transition_root : Control = $TransitionLayer/TransitionRoot
 
 # System Nodes
-@onready var level_end_timer  : Timer = $Systems/LevelEndTimer
-@onready var asteroid_manager : Node  = $Systems/AsteroidManager
+@onready var level_end_timer     : Timer = $Systems/LevelEndTimer
+@onready var fire_cooldown_timer : Timer = $Systems/FireCooldownTimer
+@onready var asteroid_manager    : Node  = $Systems/AsteroidManager
 
 # Preload Scenes
 @onready var laser          = preload("res://Scenes/Laser/laser.tscn")
@@ -241,9 +242,16 @@ func _place_player_at_level_spawn() -> void:
 
 
 func _on_laser_fired(position : Vector2, rotation : float, safeEnabled : bool, triEnabled : bool, longEnabled : bool) -> void:
+	
+	if !fire_cooldown_timer.is_stopped():
+		return
+	
+	fire_cooldown_timer.start()
+	
 	var l
 	var l2
 	var l3
+	var laser_lifespan : float = 2.15 if longEnabled else 1.15
 	if safeEnabled:
 		l = safeLaser.instantiate()
 		if triEnabled:
@@ -255,17 +263,18 @@ func _on_laser_fired(position : Vector2, rotation : float, safeEnabled : bool, t
 			l2 = safeLaser.instantiate()
 			l3 = safeLaser.instantiate()
 	
+	
+	spawn_laser(position, rotation, laser_lifespan, l)
+	
 	if triEnabled:
-		spawn_laser(position, rotation, l)
-		spawn_laser(position, rotation + 0.2, l2)
-		spawn_laser(position, rotation - 0.2, l3)
-	else:
-		spawn_laser(position, rotation, l)
-		
+		spawn_laser(position, rotation + 0.2, laser_lifespan, l2)
+		spawn_laser(position, rotation - 0.2, laser_lifespan, l3)
 
-func spawn_laser(position : Vector2, rotation : float, instantiatedLaser):
+
+func spawn_laser(position : Vector2, rotation : float, lifespan : float, instantiatedLaser):
 	instantiatedLaser.global_position = position
 	instantiatedLaser.rotation = rotation
+	instantiatedLaser.timer_length = lifespan
 	entity_root.add_child(instantiatedLaser)
 
 # Spawn any number of asteroids based on the number of positions received.
